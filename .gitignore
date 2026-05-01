@@ -1,0 +1,11 @@
+node_modules
+.htaccess
+config.txt
+
+# Ignore logs content but keep folder
+src/logs/*
+!src/logs/.gitkeep
+
+public/uploads
+public/export
+public/import
