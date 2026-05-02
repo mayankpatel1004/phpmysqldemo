@@ -43,7 +43,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                                     </select>
                                 </td>
                                 <td><input type="button" class="btn btn-primary btn-sm" name="submit" value="Submit" onclick="updateStatus()" /></td>
-                                <td><a href="<?php $site_url;?>item_section_form?item_type=default" class="btn btn-primary btn-sm">+</a>
+                                <td><a href="<?php $site_url;?>item_section_form?item_type=<?php echo $item_type;?>" class="btn btn-primary btn-sm">+</a>
                             </tr>
                         </thead>
                     </table>

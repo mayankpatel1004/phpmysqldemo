@@ -7,6 +7,15 @@ $secret_key = "asdffffs@122334";
 $records_per_page = 10;
 $allow_delete_record = "N";
 
+$email_host = "smtp.hostinger.com";
+$email_port = 465;
+$mail_from = "notifications@cloudswiftsolutions.com";
+$mail_from_name = "Cloudswift Solutions";
+$email_username = "notifications@cloudswiftsolutions.com";
+$email_password = "Cloud@112018"; 
+$smtp_secure = "ssl";
+$smtp_auth = true;
+
 $site_url = $protocol . $host . $baseDir . '/';
 $site_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
 

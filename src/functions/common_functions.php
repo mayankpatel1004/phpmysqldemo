@@ -44,4 +44,36 @@ function getAllRoles() {
     $arrResults = sqlSelect($sqlQuery);
     return $arrResults;
 }
+
+function sendMail($to, $subject, $body, $altBody = '')
+{
+    global $email_host, $smtp_auth, $email_username, $email_password,$smtp_secure, $email_port, $mail_from, $mail_from_name;
+    require_once 'src/vendor/autoload.php';
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = $email_host;
+        $mail->SMTPAuth   = $smtp_auth;
+        $mail->Username   = $email_username;
+        $mail->Password   = $email_password;
+        $mail->SMTPSecure = $smtp_secure;
+        $mail->Port       = $email_port;
+        $mail->setFrom($mail_from, $mail_from_name);
+        $mail->addAddress($to);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+        $mail->AltBody = $altBody ?: strip_tags($body);
+        $mail->send();
+        return [
+            "success" => true,
+            "message" => "Email sent successfully"
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $mail->ErrorInfo
+        ];
+    }
+}
 ?>

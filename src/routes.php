@@ -686,6 +686,20 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_section_form'){
     echo json_encode($arr);
 }
 
+if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
+
+    include 'database_operation/saveModules.php';
+    $data = $_POST;
+    unset($data['action']);
+    if (!empty($_FILES['attachment1']['name'])) {
+        $data['attachment1'] = $_FILES['attachment1']['name'];
+    }
+    if (!empty($_FILES['attachment2']['name'])) {
+        $data['attachment2'] = $_FILES['attachment2']['name'];
+    }
+    saveItemSection($data);
+}
+
 if(isset($_GET['action']) && $_GET['action'] == 'item_form'){
 
     include 'form_fields/default_item.php';
@@ -705,6 +719,21 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_form'){
     echo json_encode($arr);
 }
 
+if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
+
+    include 'database_operation/saveModules.php';
+    $data = $_POST;
+    unset($data['action']);
+    if (!empty($files['attachment1']['name'])) {
+        $data['attachment1'] = $files['attachment1']['name'];
+    }
+
+    if (!empty($files['attachment2']['name'])) {
+        $data['attachment2'] = $files['attachment2']['name'];
+    }
+    saveItemForm($data);
+}
+
 if(isset($_GET['action']) && $_GET['action'] == 'role_form'){
 
     include 'form_fields/role.php';
@@ -722,6 +751,23 @@ if(isset($_GET['action']) && $_GET['action'] == 'role_form'){
         'item_type' => $item_type
     );
     echo json_encode($arr);
+}
+
+if(isset($_POST['action']) && $_POST['action'] == 'role_form'){
+
+    include 'database_operation/saveModules.php';
+    $data = $_POST;
+    unset($data['action']);
+    saveRoleForm($data);
+}
+
+if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
+
+    include 'database_operation/saveModules.php';
+    $data = $_POST;
+    unset($data['action']);
+    unset($data['item_type']);
+    saveUserForm($data);
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'user_form'){

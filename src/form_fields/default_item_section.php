@@ -73,7 +73,7 @@ function getFormFields($request)
             "type" => $item_type === "default" ? "text" : "hidden",
             "lbl" => "UserID",
             "nm" => "user_id",
-            "val" => $user_id,
+            "val" => !empty($user_id) ? $user_id : 0,
             "req" => "N",
             "cls" => "form-control formfields",
         ];

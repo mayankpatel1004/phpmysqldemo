@@ -41,7 +41,7 @@ function getFormFields($request) {
 
         // Hidden Edit ID
         $arrFields[] = [
-            "type" => "hidden",
+            "type" => "text",
             "lbl" => "Edit ID",
             "nm" => "edit_id",
             "val" => $edit_id,
@@ -52,7 +52,7 @@ function getFormFields($request) {
         // Created At (only new)
         if ($edit_id == 0) {
             $arrFields[] = [
-                "type" => "hidden",
+                "type" => "text",
                 "lbl" => "Created",
                 "nm" => "created_at",
                 "val" => date("Y-m-d H:i:s"),
@@ -63,7 +63,7 @@ function getFormFields($request) {
 
         // Fields
         $arrFields[] = [
-            "type" => "hidden",
+            "type" => "text",
             "lbl" => "Database Name",
             "nm" => "site_db",
             "val" => $edit_site_db,

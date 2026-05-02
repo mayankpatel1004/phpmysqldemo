@@ -27,12 +27,18 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                                     Please Wait....
                                 </span>
 
-                                <button type="submit" onclick="return validateForm(event);"
-                                    class="btn btn-primary form-submit-button">
-                                    Save
-                                </button>
+                                <div>
+                                    <span id="form_error" class="small text-danger"></span>
+                                    <div>
+                                        <button type="submit" onclick="return validateForm(event);"
+                                            class="btn btn-primary form-submit-button">
+                                            Save
+                                        </button>
 
-                                <a href="#" id="backBtn" class="btn btn-primary form-submit-button">Back</a>
+                                        <a href="#" id="backBtn" class="btn btn-primary form-submit-button">Back</a>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </form>
@@ -45,6 +51,88 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
 </div>
 <?php include 'partials/footerscript.php';?>
 <script type="text/javascript">
+    function validateForm(event){
+        let is_error = 0;
+        $('[required]').each(function(index, element) {
+            if(element.value == ''){
+                $("#form_error").html(element.title+" should not blank.");
+                is_error = 1;
+                return false;
+            }
+        });
+        if(is_error == 0){
+            submitAdminForm(event);
+        }
+    }
+
+
+    function submitAdminForm(e) {
+        e.preventDefault();
+        //$(".form-submit-button").hide();
+        var formData = new FormData();
+        var fields = $('.formfields');
+        formData.append('action', 'user_form');
+        formData.append('item_type', '<?php echo $item_type;?>');
+        console.warn("Total Fields found:", fields.length);
+        $.each(fields, function (i, field) {
+            field = $(field);
+            var name = field.attr('name');
+            if (!name) {
+                console.warn('Missing name attribute:', field);
+                return;
+            }
+            if (field.attr('type') == 'checkbox') {
+                formData.append(name, field.is(':checked') ? 1 : 0);
+            } else if (field.attr('type') == 'file') {
+                $.each(field[0].files, function (i, file) {
+                formData.append(name, file);
+                });
+            } else {
+                formData.append(name, field.val());
+            }
+        });
+        console.warn("================= FormData entries: ==========");
+        for (let pair of formData.entries()) {
+            console.warn(pair[0] + ': ' + pair[1]);
+        }
+        $.ajax({
+            type: "POST",
+            url: '<?php echo $site_url;?>routes',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        success: function (response1) {    
+            console.log("Raw response:", response1);
+            let response = JSON.parse(response1);
+            if (response.success == 0) {
+                $("#loading-button").hide();
+                $(".form-submit-button").show();
+                swal({
+                    icon: 'error',
+                    title: 'Fail!',
+                    text: response.message || 'An error occurred while saving your data.'
+                });
+            } else {
+                swal({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Your data has been saved successfully.'
+                }).then(() => {
+                    window.location.href = "<?php echo $site_url; ?>users?item_type=<?php echo $item_type;?>";
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            $("#loading-button").hide();
+            $(".form-submit-button").show();
+            console.error("Error:", error);
+        }
+        });
+    }
+    
     document.addEventListener("DOMContentLoaded", function(){
         setTimeout(function(){
             hideLoader();
