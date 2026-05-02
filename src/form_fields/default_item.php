@@ -25,7 +25,7 @@ function getFormFields($request) {
         $published_end_at = date("Y-m-d", strtotime("+5 years"));
         $meta_title = "";
         $meta_description = "";
-        $display_order = "";
+        $display_order = "0";
         $display_status = "";
 
         // EDIT MODE

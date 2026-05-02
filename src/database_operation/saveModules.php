@@ -208,7 +208,6 @@ function saveItemForm($data, $files = [], $headers = []) {
 function saveRoleForm($data) {
     global $pdo;
     try {
-        $pdo->beginTransaction();
         $roleId = $data['edit_id'] ?? 0;
         $excludeKeys = ["edit_id", "view", "add", "edit", "delete", "module_id"];
 
@@ -233,6 +232,11 @@ function saveRoleForm($data) {
             $sql = "UPDATE role SET " . implode(", ", $setParts) . " WHERE role_id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([...$values, $roleId]);
+
+            $deleteSql = "DELETE FROM role_access WHERE role_id = ?";
+            $stmt = $pdo->prepare($deleteSql);
+            $stmt->execute([$roleId]);
+
         } else {
             $placeholders = implode(", ", array_fill(0, count($keys), "?"));
             $sql = "INSERT INTO role (" . implode(", ", $keys) . ") VALUES ($placeholders)";
@@ -241,9 +245,7 @@ function saveRoleForm($data) {
             $roleId = $pdo->lastInsertId();
         }
         //echo "Role ID: " . $roleId; // Debugging line to check role ID
-        $deleteSql = "DELETE FROM role_access WHERE role_id = ?";
-        $stmt = $pdo->prepare($deleteSql);
-        $stmt->execute([$roleId]);
+        
 
         if (
             isset($data['module_id'], $data['view']) &&
@@ -351,43 +353,43 @@ function saveUserForm($data){
             //     echo json_encode($arr);
             // }
 
-            // $arr = array(
-            //     "success" => 1,
-            //     "message" => "Success",
-            //     "data" => array("user_id" => $userId)
-            // );
-            // echo json_encode($arr);
-    }
-
-    $placeholders = implode(", ", array_fill(0, count($keys), "?"));
-    $sql = "INSERT INTO users (" . implode(", ", $keys) . ") VALUES ($placeholders)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($values);
-    $userId = $pdo->lastInsertId();
-    if (!empty($data['user_email'])) {
-        $to = $data['user_email'];
-        $subject = 'Account Created';
-        $body = ($data['user_firstname'] ?? '') . ",<br>Your account has been created successfully.";
-        $emailResponse = sendMail($to,$subject,$body);
-        if (!$emailResponse['success']) {
-            error_log("Email Error: " . $emailResponse['message']);
-        }
-    }
-
-    if ($userId > 0) {
-        $arr = array(
-            "success" => 1,
-            "message" => "Success",
-            "data" => array("user_id" => $userId)
-        );
-        echo json_encode($arr);
+            $arr = array(
+                "success" => 1,
+                "message" => "Success",
+                "data" => array("user_id" => $userId)
+            );
+            echo json_encode($arr);
     } else {
-        $arr = array(
-            "success" => 0,
-            "message" => "Fail to insert data",
-            "data" => array()
-        );
-        echo json_encode($arr);
+        $placeholders = implode(", ", array_fill(0, count($keys), "?"));
+        $sql = "INSERT INTO users (" . implode(", ", $keys) . ") VALUES ($placeholders)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($values);
+        $userId = $pdo->lastInsertId();
+        if (!empty($data['user_email'])) {
+            $to = $data['user_email'];
+            $subject = 'Account Created';
+            $body = ($data['user_firstname'] ?? '') . ",<br>Your account has been created successfully.";
+            $emailResponse = sendMail($to,$subject,$body);
+            if (!$emailResponse['success']) {
+                error_log("Email Error: " . $emailResponse['message']);
+            }
+        }
+
+        if ($userId > 0) {
+            $arr = array(
+                "success" => 1,
+                "message" => "Success",
+                "data" => array("user_id" => $userId)
+            );
+            echo json_encode($arr);
+        } else {
+            $arr = array(
+                "success" => 0,
+                "message" => "Fail to insert data",
+                "data" => array()
+            );
+            echo json_encode($arr);
+        }
     }
     } catch (PDOException $e) {
         if ($e->getCode() == 23000) {

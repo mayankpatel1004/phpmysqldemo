@@ -212,7 +212,7 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
                                     type="${field.type}" 
                                     name="${field.nm}" 
                                     id="${field.nm}"
-                                    value="${field.val || ''}" 
+                                    value="${field.val}" 
                                     placeholder="${field.lbl || ''}"
                                     ${required}
                                 >`;

@@ -342,7 +342,7 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
                     title: 'Success!',
                     text: 'Your data has been saved successfully.'
                 }).then(() => {
-                    /*window.location.href = "<?php echo $site_url; ?>roles?item_type=<?php echo $item_type;?>";*/
+                    window.location.href = "<?php echo $site_url; ?>roles?item_type=<?php echo $item_type;?>";
                 });
             }
         },

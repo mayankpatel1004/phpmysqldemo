@@ -1,7 +1,7 @@
 <?php
 function getFormFields($request) {
     try {
-        
+        global $dbname;
         $arrFields = [];
 
         // Default values
@@ -11,7 +11,7 @@ function getFormFields($request) {
         $edit_email = "";
         $edit_active_status = "Y";
         $edit_role_id = 0;
-        $edit_site_db = getenv('DB_NAME');
+        $edit_site_db = $dbname;
         $readonly = "";
         $user_photo = "";
 
@@ -39,7 +39,7 @@ function getFormFields($request) {
 
         // Hidden Edit ID
         $arrFields[] = [
-            "type" => "text",
+            "type" => "hidden",
             "lbl" => "Edit ID",
             "nm" => "edit_id",
             "val" => $edit_id,
@@ -50,7 +50,7 @@ function getFormFields($request) {
         // Created At (only new)
         if ($edit_id == 0) {
             $arrFields[] = [
-                "type" => "text",
+                "type" => "hidden",
                 "lbl" => "Created",
                 "nm" => "created_at",
                 "val" => date("Y-m-d H:i:s"),
@@ -61,7 +61,7 @@ function getFormFields($request) {
 
         // Fields
         $arrFields[] = [
-            "type" => "text",
+            "type" => "hidden",
             "lbl" => "Database Name",
             "nm" => "site_db",
             "val" => $edit_site_db,
