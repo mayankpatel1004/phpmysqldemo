@@ -23,7 +23,7 @@ function getBlogCategory($item_type){
 }
 
 function getRoleById($role_id){
-    $sqlQuery = "SELECT role_id, role_title FROM roles WHERE role_id = $role_id AND deleted_status = 'N'";
+    $sqlQuery = "SELECT * FROM role WHERE role_id = $role_id AND deleted_status = 'N'";
     $arrResults = sqlSelect($sqlQuery);
     return $arrResults;
 }

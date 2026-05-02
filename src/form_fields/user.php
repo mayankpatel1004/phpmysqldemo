@@ -19,13 +19,11 @@ function getFormFields($request) {
         if (!empty($_GET['edit_id']) && $_GET['edit_id'] > 0) {
             $edit_id = $_GET['edit_id'];
 
-            $sql = "SELECT * FROM users WHERE user_id = ?";
-            $stmt = $db->prepare($sql);
-            $stmt->execute([$edit_id]);
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $sql = "SELECT * FROM users WHERE user_id = $edit_id";
+            $row = sqlSelect($sql);
 
-            if ($results && count($results) > 0) {
-                $row = $results[0];
+            if ($row && count($row) > 0) {
+                $row = $row[0];
 
                 $edit_id = $row['user_id'];
                 $edit_firstname = $row['user_firstname'];

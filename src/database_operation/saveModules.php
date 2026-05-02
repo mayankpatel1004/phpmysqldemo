@@ -207,7 +207,6 @@ function saveItemForm($data, $files = [], $headers = []) {
 
 function saveRoleForm($data) {
     global $pdo;
-
     try {
         $pdo->beginTransaction();
         $roleId = $data['edit_id'] ?? 0;
@@ -241,6 +240,7 @@ function saveRoleForm($data) {
             $stmt->execute($values);
             $roleId = $pdo->lastInsertId();
         }
+        //echo "Role ID: " . $roleId; // Debugging line to check role ID
         $deleteSql = "DELETE FROM role_access WHERE role_id = ?";
         $stmt = $pdo->prepare($deleteSql);
         $stmt->execute([$roleId]);
@@ -252,8 +252,7 @@ function saveRoleForm($data) {
             count($data['module_id']) === count($data['view'])
         ) {
 
-            $insertSql = "INSERT INTO role_access 
-                (role_id, module_id, grant_view, grant_add, grant_edit, grant_delete, display_status, display_order, created_at)
+            $insertSql = "INSERT INTO role_access (role_id, module_id, grant_view, grant_add, grant_edit, grant_delete, display_status, display_order, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($insertSql);
 
@@ -332,15 +331,6 @@ function saveUserForm($data){
             }
         }
 
-        if (empty($keys)) {
-            $arr = array(
-                "success" => 0,
-                "message" => "Data not found",
-                "data" => array()
-            );
-            echo json_encode($arr);
-        }
-
         if (!empty($data['edit_id']) && (int)$data['edit_id'] > 0) {
             $userId = $data['edit_id'];
             $setParts = [];
@@ -352,21 +342,21 @@ function saveUserForm($data){
             $stmt = $pdo->prepare($sql);
             $stmt->execute([...$values, $userId]);
 
-            if ($stmt->rowCount() === 0) {
-                $arr = array(
-                    "success" => 0,
-                    "message" => "Data not found",
-                    "data" => array()
-                );
-                echo json_encode($arr);
-            }
+            // if ($stmt->rowCount() === 0) {
+            //     $arr = array(
+            //         "success" => 0,
+            //         "message" => "Data not found",
+            //         "data" => array()
+            //     );
+            //     echo json_encode($arr);
+            // }
 
-            $arr = array(
-                "success" => 1,
-                "message" => "Success",
-                "data" => array("user_id" => $userId)
-            );
-            echo json_encode($arr);
+            // $arr = array(
+            //     "success" => 1,
+            //     "message" => "Success",
+            //     "data" => array("user_id" => $userId)
+            // );
+            // echo json_encode($arr);
     }
 
     $placeholders = implode(", ", array_fill(0, count($keys), "?"));

@@ -32,11 +32,11 @@ function getFormFields($request) {
         if (!empty($_GET['edit_id']) && $_GET['edit_id'] > 0) {
             $edit_id = $_GET['edit_id'];
 
-            $stmt = $db->prepare("SELECT * FROM items WHERE item_id = ?");
-            $stmt->execute([$edit_id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $sql = "SELECT * FROM items WHERE item_id = $edit_id";
+            $row = sqlSelect($sql);
 
             if ($row) {
+                $row = $row[0];
                 $item_id = $row['item_id'];
                 $item_title = $row['item_title'];
                 $item_alias = $row['item_alias'];

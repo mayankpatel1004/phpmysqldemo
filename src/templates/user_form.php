@@ -1,8 +1,12 @@
 <?php include 'partials/header.php';?>
 <?php
 $item_type = "";
+$edit_id = 0;
 if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     $item_type = $_GET['item_type'];
+}
+if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
+    $edit_id = $_GET['edit_id'];
 }
 ?>
 <div class="page-body-wrapper">
@@ -68,7 +72,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
 
     function submitAdminForm(e) {
         e.preventDefault();
-        //$(".form-submit-button").hide();
+        $(".form-submit-button").hide();
         var formData = new FormData();
         var fields = $('.formfields');
         formData.append('action', 'user_form');
@@ -121,7 +125,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                     title: 'Success!',
                     text: 'Your data has been saved successfully.'
                 }).then(() => {
-                    window.location.href = "<?php echo $site_url; ?>users?item_type=<?php echo $item_type;?>";
+                    window.location.href = "<?php echo $site_url; ?>users?item_type=";
                 });
             }
         },
@@ -143,7 +147,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     function getFormData(){
         $.ajax({
             type: "GET",
-            url: '<?php echo $site_url;?>routes?action=user_form&item_type=<?php echo $item_type;?>',
+            url: '<?php echo $site_url;?>routes?action=user_form&item_type=<?php echo $item_type;?>&edit_id=<?php echo $edit_id;?>',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },

@@ -16,14 +16,15 @@ function getFormFields($request)
         $meta_title = "";
         $meta_description = "";
         $created_at = "";
-
+        
         if (!empty($request['edit_id']) && $request['edit_id'] > 0) {
             $item_section_id = $request['edit_id'];
 
-            $sqlQuery = "SELECT * FROM item_section WHERE item_section_id = ?";
+            $sqlQuery = "SELECT * FROM item_section WHERE item_section_id = $item_section_id";
             $row = sqlSelect($sqlQuery);
-
+            
             if ($row) {
+                $row = $row[0];
                 $item_section_id = $row['item_section_id'];
                 $section_title = $row['section_title'];
                 $section_alias = $row['section_alias'];
@@ -37,7 +38,6 @@ function getFormFields($request)
                 $meta_description = $row['meta_description'];
                 $created_at = $row['created_at'];
             }
-
         }
 
         // Fields array
@@ -93,7 +93,7 @@ function getFormFields($request)
             "nm" => "item_type",
             "val" => $item_type,
             "options" => itemSectionTypes(),
-            "cls" => "form-control",
+            "cls" => "form-control formfields",
         ];
 
         $arrFields[] = [
@@ -102,7 +102,7 @@ function getFormFields($request)
             "nm" => "display_status",
             "val" => $display_status,
             "options" => displayStatus(),
-            "cls" => "form-control",
+            "cls" => "form-control formfields",
         ];
 
         $arrFields[] = [
@@ -110,7 +110,7 @@ function getFormFields($request)
             "lbl" => "Meta Title",
             "nm" => "meta_title",
             "val" => $meta_title,
-            "cls" => "form-control",
+            "cls" => "form-control formfields",
         ];
 
         $arrFields[] = [
@@ -118,7 +118,7 @@ function getFormFields($request)
             "lbl" => "Meta Description",
             "nm" => "meta_description",
             "val" => $meta_description,
-            "cls" => "form-control",
+            "cls" => "form-control formfields",
         ];
 
         $arrFields[] = [

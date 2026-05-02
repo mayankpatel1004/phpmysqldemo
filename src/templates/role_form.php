@@ -1,8 +1,12 @@
 <?php include 'partials/header.php';?>
 <?php
 $item_type = "";
+$edit_id = 0;
 if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     $item_type = $_GET['item_type'];
+}
+if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
+    $edit_id = $_GET['edit_id'];
 }
 ?>
 <div class="page-body-wrapper">
@@ -57,7 +61,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     function getFormData(){
         $.ajax({
             type: "GET",
-            url: '<?php echo $site_url;?>routes?action=role_form&item_type=<?php echo $item_type;?>',
+            url: '<?php echo $site_url;?>routes?action=role_form&item_type=<?php echo $item_type;?>&edit_id=<?php echo $edit_id;?>',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
@@ -173,7 +177,22 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     `;
 
     let modules = response.form_fields.modules || [];
+    let role_access = response.form_fields.role_access || {};
     modules.forEach(row => {
+
+        const roleAccessMap = {};
+        role_access.forEach(r => {
+            roleAccessMap[r.module_id] = r;
+        });
+
+        let access = roleAccessMap[row.meta_id] || {};
+        const isViewChecked   = access.grant_view   === "Y" ? "checked" : "";
+        const isAddChecked    = access.grant_add    === "Y" ? "checked" : "";
+        const isEditChecked   = access.grant_edit   === "Y" ? "checked" : "";
+        const isDeleteChecked = access.grant_delete === "Y" ? "checked" : "";
+
+        
+
         module_html += `
             <tr>
                 <td>${row.meta_id}</td>
@@ -190,7 +209,9 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                            id="${row.meta_id}_view"
                            accept="viewcolumn"
                            name="view[]"
-                           class="form-control formfields viewcolumn" />
+                           class="form-control formfields viewcolumn"
+                           ${isViewChecked}
+                           />
                 </td>
 
                 <td>
@@ -198,7 +219,9 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                            id="${row.meta_id}_add"
                            accept="addcolumn"
                            name="add[]"
-                           class="form-control formfields addcolumn" />
+                           class="form-control formfields addcolumn"
+                           ${isAddChecked}
+                           />
                 </td>
 
                 <td>
@@ -206,7 +229,9 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                            id="${row.meta_id}_edit"
                            accept="editcolumn"
                            name="edit[]"
-                           class="form-control formfields editcolumn" />
+                           class="form-control formfields editcolumn"
+                           ${isEditChecked}
+                           />
                 </td>
 
                 <td>
@@ -214,7 +239,9 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                            id="${row.meta_id}_delete"
                            accept="deletecolumn"
                            name="delete[]"
-                           class="form-control formfields deletecolumn" />
+                           class="form-control formfields deletecolumn"
+                           ${isDeleteChecked}
+                           />
                 </td>
             </tr>
         `;
@@ -315,7 +342,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                     title: 'Success!',
                     text: 'Your data has been saved successfully.'
                 }).then(() => {
-                    window.location.href = "<?php echo $site_url; ?>items?item_type=<?php echo $item_type;?>";
+                    /*window.location.href = "<?php echo $site_url; ?>roles?item_type=<?php echo $item_type;?>";*/
                 });
             }
         },

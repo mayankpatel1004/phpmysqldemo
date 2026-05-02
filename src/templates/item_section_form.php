@@ -1,8 +1,12 @@
 <?php include 'partials/header.php';?>
 <?php
 $item_type = "";
+$edit_id = 0;
 if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     $item_type = $_GET['item_type'];
+}
+if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
+    $edit_id = $_GET['edit_id'];
 }
 ?>
 <div class="page-body-wrapper">
@@ -58,7 +62,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
     function getFormData(){
         $.ajax({
             type: "GET",
-            url: '<?php echo $site_url;?>routes?action=item_section_form&item_type=<?php echo $item_type;?>',
+            url: '<?php echo $site_url;?>routes?action=item_section_form&item_type=<?php echo $item_type;?>&edit_id=<?php echo $edit_id;?>',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },

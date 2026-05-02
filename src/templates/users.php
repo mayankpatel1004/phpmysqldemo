@@ -142,12 +142,13 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                 let items = final_response.data;
                 if (items && items.length > 0) {
                     $.each(items, function (index, item) {
+                        let edit_url = `<?php echo $site_url;?>user_form?item_type=user&edit_id=${item.user_id}`;
                         counter++;
                         $("#listing_display_data").append(`<tr>
                             
                             <td><input type="checkbox" class="checkbox_css item ml-3 sales_summary_list_checkbox" name="chk[]" id="chk_${item.user_id}" accept="allitems" value="${item.user_id}" /></td>
 
-                            <td><a href="{{formUrl}}&edit_id=${item.user_id}">${item.user_firstname}</a></td>
+                            <td><a href="${edit_url}">${item.user_firstname}</a></td>
 
                             <td>${item.user_email}</td>
                             
