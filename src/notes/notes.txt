@@ -4,3 +4,11 @@ git add . && git commit -m "Updates" && git push origin main
 /opt/lampp/bin/php /opt/lampp/htdocs/phpmysqldemo/src/migrations/seeders.php
 
 http://localhost/phpmysqldemo/
+
+
+To Do : 
+==============
+- Meta titles, description and page title is required on each page.
+- Forgot password functionality.
+- Site configuration.
+- To test everything in postman.
