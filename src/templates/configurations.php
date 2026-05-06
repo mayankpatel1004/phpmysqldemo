@@ -5,7 +5,7 @@
         <div class="content-wrapper">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-white bg-primary p-2">Configurations</h4>
+                    <h4 class="card-title text-white bg-primary p-2"><?php echo ucfirst($pageTitle); ?></h4>
                 </div>
             </div>
         </div>

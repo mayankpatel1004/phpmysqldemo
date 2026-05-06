@@ -17,7 +17,7 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
         <div class="content-wrapper">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-white bg-primary p-2">Users</h4>
+                    <h4 class="card-title text-white bg-primary p-2"><?php echo ucfirst($pageTitle); ?></h4>
                     <table class="mb-2 w-100">
                         <thead>
                             <tr>
