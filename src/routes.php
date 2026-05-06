@@ -592,7 +592,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
 if(isset($_GET['action']) && $_GET['action'] == 'metadetailsfilter'){
 
 
-    $sqlMetaDetail = "SELECT * FROM meta_details WHERE is_module = 1";
+    $sqlMetaDetail = "SELECT * FROM meta_details";
     $arrData = sqlSelect($sqlMetaDetail);
     $arrColumns = array('MetaID','Title','Sidebar Title','URL','Meta Title','Meta Description','Order');
     if(isset($_GET['action2']) && $_GET['action2'] == 'updatefields'){
@@ -605,6 +605,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'metadetailsfilter'){
             if ($metaId <= 0) continue;
             if (!isset($value)) continue;
             $sql = "UPDATE meta_details SET `$column` = :value WHERE meta_id = :meta_id";
+            
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':value'   => $value,

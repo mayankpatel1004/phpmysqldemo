@@ -1,10 +1,16 @@
+<?php
+$arrMetaDetails = getMetaDetails();
+$metaTitle = $arrMetaDetails['metaTitle'] ?? "Default Title";
+$metaDescription = $arrMetaDetails['metaDescription'] ?? "Default Meta Description";
+$pageTitle = $arrMetaDetails['pageTitle'] ?? "Default Page Title";
+?>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Title</title>
-    <meta name="description" content="{{meta_description}}" />
-    <meta property="og:title" content="Meta Title" />
-    <meta property="og:description" content="Meta Description" />
+    <title><?php echo $pageTitle; ?></title>
+    <meta name="description" content="<?php echo $metaDescription; ?>" />
+    <meta property="og:title" content="<?php echo $metaTitle; ?>" />
+    <meta property="og:description" content="<?php echo $metaDescription; ?>" />
     <meta property="og:image" content="./public/images/default_profile_photo.png" />
     <meta property="og:url" content="https://example.com/products" />
     <meta name="twitter:card" content="summary_large_image" />

@@ -85,7 +85,7 @@
                 all_rows.forEach(item => {
                     html += `<tr>
                         <td>${item.meta_id}</td>
-                        <td>${item.page_title}</td>
+                        <td><input type="text" class="form-control-sm w-100 formfields" value="${item.page_title}" name="page_title" id="page_title__${item.meta_id}" /></td>
                         <td>${item.sidebar_title}</td>
                         <td>${item.end_points}</td>
                         <td><input type="text" class="form-control-sm w-100 formfields" value="${item.meta_title}" name="meta_title" id="meta_title__${item.meta_id}" /></td>

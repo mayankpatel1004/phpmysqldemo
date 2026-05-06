@@ -76,4 +76,34 @@ function sendMail($to, $subject, $body, $altBody = '')
         ];
     }
 }
+function getMetaDetails(){
+    global $site_url,$pdo;
+    $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+    $currentUrl .= "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $path = parse_url($site_url, PHP_URL_PATH);
+    $baseUrl = str_replace($site_url,"",$currentUrl);
+    $final_string = "/".$baseUrl;
+
+    $metaTitle = "Default Meta Title";
+    $metaDescription = "Default Meta Description";
+    $pageTitle = "Default Page Title";
+
+    $sqlQuery = "SELECT * FROM `meta_details` WHERE `end_points` = '$final_string'";
+    $arrMetaDetails = sqlSelect($sqlQuery, PDO::FETCH_ASSOC);
+    if($arrMetaDetails) {
+        $siteTitle = $arrMetaDetails[0]['meta_title'];
+        $metaDescription = $arrMetaDetails[0]['meta_description'];
+        $pageTitle = $arrMetaDetails[0]['page_title'];
+    } else {
+        $sqlInsert = "INSERT INTO `meta_details` (`end_points`, `meta_title`, `meta_description`, `page_title`) VALUES ('$final_string', '$metaTitle', '$metaDescription', '$pageTitle')";
+        $stmt = $pdo->prepare($sqlInsert);
+        $stmt->execute();
+        $itemId = $pdo->lastInsertId();
+    }
+    return [
+        "metaTitle" => $siteTitle,
+        "metaDescription" => $metaDescription,
+        "pageTitle" => $pageTitle
+    ];
+}
 ?>
