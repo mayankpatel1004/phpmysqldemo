@@ -103,6 +103,66 @@ if(isset($_GET['action']) && $_GET['action'] == 'reset-password'){
     exit;
 }
 
+if(isset($_GET['action']) && $_GET['action'] == 'site_configurations'){
+    $parentsMap = [];
+    $sqlParentConfigurations = "
+        SELECT 
+            p.site_config_parent_id,
+            p.site_config_title,
+            c.config_name,
+            c.config_title,
+            c.config_id,
+            c.config_value,
+            c.input_type,
+            c.comments AS options
+        FROM site_config_parent p
+        LEFT JOIN site_config c 
+            ON c.site_config_parent_id = p.site_config_parent_id
+        WHERE p.deleted_status = 'N'
+        ORDER BY p.site_config_parent_id";
+    $arrParentConfigurations = sqlSelect($sqlParentConfigurations);
+    if($arrParentConfigurations){
+        foreach($arrParentConfigurations as $row){
+            $site_config_parent_id = $row['site_config_parent_id'];
+            $site_config_title     = $row['site_config_title'];
+            $config_name           = $row['config_name'];
+            $config_title          = $row['config_title'];
+            $config_id             = $row['config_id'];
+            $config_value          = $row['config_value'];
+            $input_type            = $row['input_type'];
+            $options               = $row['options'];
+
+            if(!isset($parentsMap[$site_config_parent_id])){
+                $parentsMap[$site_config_parent_id] = [
+                    "id"       => $site_config_parent_id,
+                    "name"     => $site_config_title,
+                    "products" => []
+                ];
+            }
+
+            if(!empty($config_id)){
+                $parentsMap[$site_config_parent_id]['products'][] = [
+                    "id"          => $config_id,
+                    "title"       => $config_title,
+                    "name"        => $config_name,
+                    "parent_id"   => $site_config_parent_id,
+                    "parent_name" => $site_config_title,
+                    "value"       => $config_value,
+                    "input_type"  => $input_type,
+                    "options"     => $options
+                ];
+            }
+        }
+        $parents = array_values($parentsMap);
+        $responseData = ["configurations" => $parents];
+    } else {
+        $responseData = ["configurations" => []];
+    }
+    echo json_encode($responseData);
+    exit;
+}
+
+
 if(isset($_GET['action']) && $_GET['action'] == 'itemsfilter'){
 
     $searchKeywordString = '';
