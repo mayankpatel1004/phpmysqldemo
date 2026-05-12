@@ -1,3 +1,8 @@
+<?php
+$user_email = $_GET['user_email'] ?? '';
+$user_token = $_GET['user_token'] ?? '';
+$user_id = $_GET['user_id'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,19 +32,18 @@
               </div>
               <h4>Hello! Please reset your password</h4>
               <h6 class="font-weight-light">Please enter password and confirm password</h6>
-              <form class="pt-3" id="moduleform">
-                <div class="form-group d-none">
-                  <input type="text" class="form-control form-control-lg" id="code" placeholder="Email Code"
-                    value="{{token}}" />
-                  <input type="hidden" name="user_name" id="user_name" value="{{email}}" />
-                  <input type="hidden" name="user_id" id="user_id" value="{{id}}" />
+              <form class="pt-3" id="moduleform" action="<?php echo $site_url;?>routes?action=reset-password">
+                <div class="form-group">
+                  <input type="hidden" name="user_email" id="user_email" value="<?php echo $user_email;?>" />
+                  <input type="hidden" name="user_token" id="user_token" value="<?php echo $user_token;?>" />
+                  <input type="hidden" name="user_id" id="user_id" value="<?php echo $user_id;?>" />
                 </div>
                 <div class="form-group">
-                  <input type="password" class="form-control form-control-lg" id="password" placeholder="Password" />
+                  <input type="password" class="form-control form-control-lg" id="password" placeholder="Password" name="password" />
                 </div>
                 <div class="form-group">
                   <input type="password" class="form-control form-control-lg" id="cpassword"
-                    placeholder="Confirm Password" />
+                    placeholder="Confirm Password" id="cpassword" />
                 </div>
                 <div id="error" class="text-danger font-weight-bold"></div>
                 <div class="mt-3">
@@ -50,7 +54,7 @@
                   <div class="form-check">
 
                   </div>
-                  <a href="/login" class="auth-link text-black">Back To Login</a>
+                  <a href="<?php echo $site_url;?>login" class="auth-link text-black">Back To Login</a>
                 </div>
               </form>
             </div>
@@ -66,45 +70,32 @@
         $("#submit_button").html("Please wait...");
         $("#error").val('');
         e.preventDefault();
-        if ('{{email}}' == '') {
-          $("#error").html("Invalid Email Address");
-        }
-        else if ('{{token}}' == '') {
-          $("#error").html("Invalid token");
-          $("#submit_button").html("SUBMIT");
-        }
-        else if ($("#password").val() == '') {
-          $("#error").html("Password Cannot be blank");
-          $("#submit_button").html("SUBMIT");
-        }
-        else if ($("#password").val().length < 6) {
-          $("#error").html("Password Should be atleast 6 characters");
-          $("#submit_button").html("SUBMIT");
-        }
-        else if ($("#password").val() != $("#cpassword").val()) {
-          $("#error").html("Password Mismatch");
-          $("#submit_button").html("SUBMIT");
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        let password = $("#password").val();
+        let cpassword = $("#cpassword").val();
+        if(password == ''){
+          alert("Please enter your password");
+        } else if(password.length < 8){
+          alert("Please enter your password minimum 8 characters");
+        } else if(cpassword == ''){
+          alert("Please enter your confirm password");
+        } else if(password != cpassword){
+          alert("Password mismatch");
         } else {
-          let values = {
-            id: '{{id}}',
-            email: '{{email}}',
-            token: '{{token}}',
-            password: $("#password").val()
-          }
           $.ajax({
             method: "POST",
-            url: '/activate_account',
-            dataType: "json",
-            data: values
-          })
-            .done(function (response) {
-              $("#submit_button").html("SUBMIT");
-              if (response.success == 1) {
-                window.location.href = '/login';
-              } else {
-                alert("Error : " + JSON.stringify(response.query));
-              }
-            });
+            url: actionUrl,
+            data: form.serialize(),
+          }).done(function (response) {
+            let data = JSON.parse(response);
+            $("#submit_button").html("SUBMIT");
+            if (data.success == 1) {
+              window.location.href = '<?php echo $site_url;?>login';
+            } else {
+              alert("Error : " + JSON.stringify(data.message));
+            }
+          });
         }
       });
     });

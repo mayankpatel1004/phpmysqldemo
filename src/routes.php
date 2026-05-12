@@ -1,4 +1,10 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'src/vendor/autoload.php';
+$mail = new PHPMailer(true);
+
+
 if(isset($_GET['action']) && $_GET['action'] == 'login'){
     $user_name = $_POST['user_name'];
     $password = $_POST['password'];
@@ -14,6 +20,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'login'){
         } else if(md5($password) != $results['user_password']){
             $allow_login = 0;
             $message = "Incorrect Password";
+            $success = 0;
         } else if($results['active_status'] != 'Y'){
             $message = "Your Account is inactive";
             $success = 0;
@@ -31,6 +38,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'login'){
         $response['token'] = $token;
         
         $arr = array(
+            'md5' => md5($password),
             'success' => $success,
             'message' => $message,
             'data' => $response
@@ -44,6 +52,57 @@ if(isset($_GET['action']) && $_GET['action'] == 'login'){
         echo json_encode($arr);
     }
 }
+
+if(isset($_GET['action']) && $_GET['action'] == 'forgot-password'){
+    $token = random_int(100000, 999999);
+    $user_email = $_POST['user_email'];
+    $sqlUpdate = "UPDATE users SET user_token = '$token' WHERE user_email = '$user_email'";
+    sqlUpdate($sqlUpdate);
+    $to = $user_email;
+    $subject = 'Your token for reset password.';
+    $body = "Token = $token";
+    $altBody = 'This is a test email using Hostinger SMTP (SSL 465)';
+    $arrData = sendMail($to, $subject, $body, $altBody = '');
+    echo json_encode($arrData);
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'password-token'){
+
+    $user_token = $_POST['user_token'] ?? '';
+    $user_email = $_POST['user_email'] ?? '';
+    $sqlVerifyToken = "SELECT * FROM users WHERE user_token = '$user_token' AND user_email = '$user_email'";
+    $arrData = sqlSelect($sqlVerifyToken);
+    if(isset($arrData) && $arrData != false){
+        $data = $arrData[0];
+        $data['success'] = 1;
+        $data['message'] = "Success";
+        echo json_encode($data);
+        exit;   
+    } else {
+        $data = [];
+        $data['success'] = 0;
+        $data['message'] = "Your token mismatch. Please verify your email.";
+        echo json_encode($data);
+        exit;   
+    }
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'reset-password'){
+    $password = $_POST['password'] ?? '';
+    $user_email = $_POST['user_email'] ?? '';
+    $user_token = $_POST['user_token'] ?? '';
+    $user_id = $_POST['user_id'] ?? '';
+    $new_password = md5($password);
+    $sqlUpdatePassword = "UPDATE users SET user_password = '$new_password',user_token = '' WHERE user_id = '$user_id' AND user_email = '$user_email'";
+    echo $sqlUpdatePassword;
+    sqlUpdate($sqlUpdatePassword);
+    $data = $_POST;
+    $data['success'] = 1;
+    $data['message'] = "Success";
+    echo json_encode($data);
+    exit;
+}
+
 if(isset($_GET['action']) && $_GET['action'] == 'itemsfilter'){
 
     $searchKeywordString = '';
@@ -590,8 +649,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'metadetailsfilter'){
-
-
     $sqlMetaDetail = "SELECT * FROM meta_details";
     $arrData = sqlSelect($sqlMetaDetail);
     $arrColumns = array('MetaID','Title','Sidebar Title','URL','Meta Title','Meta Description','Order');

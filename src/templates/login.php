@@ -46,7 +46,7 @@
                   </div>
                 </form>
                 <br />
-                <a href="/forgot-password" class="text-secondary small">Forgot
+                <a href="<?php echo $site_url;?>forgot-password" class="text-secondary small">Forgot
                   Password?</a>
               </div>
             </div>

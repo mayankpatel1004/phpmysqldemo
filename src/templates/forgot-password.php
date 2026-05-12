@@ -26,7 +26,7 @@
               </div>
               <h4>Hello! Forgot Password?</h4>
               <h6 class="font-weight-light">Please enter your email to reset your password</h6>
-              <form class="pt-3" method="POST" id="forgot-password-form" action="/forgot-password">
+              <form class="pt-3" method="POST" id="forgot-password-form" action="<?php echo $site_url;?>routes?action=forgot-password">
                 <div class="form-group">
                   <input type="email" class="form-control form-control-lg" name="user_email" id="user_email"
                     placeholder="Email" value="developer112018@yopmail.com">
@@ -39,7 +39,7 @@
                   <div class="form-check">
 
                   </div>
-                  <a href="/login" class="auth-link text-black">Back To Login</a>
+                  <a href="<?php echo $site_url;?>login" class="auth-link text-black">Back To Login</a>
                 </div>
               </form>
             </div>
@@ -62,10 +62,11 @@
         data: form.serialize(),
         success: function (data) {
           $("#submit_button").html("SUBMIT");
-          if (data.success == 1) {
-            window.location.href = '/password-token?email=' + $("#user_email").val();
+          let response = JSON.parse(data);
+          if (response.success == 1) {
+            window.location.href = '<?php echo $site_url;?>password-token?user_email=' + $("#user_email").val();
           } else {
-            alert(data.message);
+            alert(response.message);
           }
         }
       });
