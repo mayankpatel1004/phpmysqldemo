@@ -1,4 +1,19 @@
 <?php
+function getRealQuery($sql, $params)
+{
+    foreach ($params as $value) {
+
+        if (is_string($value)) {
+            $value = "'" . addslashes($value) . "'";
+        } elseif ($value === null) {
+            $value = "NULL";
+        }
+
+        $sql = preg_replace('/\?/', $value, $sql, 1);
+    }
+
+    return $sql;
+}
 function saveItemSection($data) {
     global $pdo;
     $keys = [];
@@ -23,6 +38,7 @@ function saveItemSection($data) {
         $sql = "UPDATE item_section SET " . implode(", ", $setParts) . " WHERE item_section_id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([...$values, $data['item_section_id']]);
+        //echo getRealQuery($sql, [...$values, $data['item_section_id']]);
         return [
             "success" => 1,
             "message" => "Success",
@@ -43,7 +59,8 @@ function saveItemSection($data) {
             $stmt = $pdo->prepare($sql);
             $stmt->execute($values);
             $insertedId = $pdo->lastInsertId();
-
+            //echo getRealQuery($sql, $values);
+            
             if ($insertedId > 0) {
                 //$section_alias = functions::getTitleAlias($data['section_title']);
                 $section_alias = $data['section_title'];

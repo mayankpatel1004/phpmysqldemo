@@ -41,6 +41,17 @@ function getFormFields($request)
         }
 
         // Fields array
+
+        $arrFields[] = [
+            "type" => "hidden",
+            "lbl" => "item_section_id",
+            "nm" => "item_section_id",
+            "val" => $item_section_id,
+            "ph" => "",
+            "req" => "Y",
+            "cls" => "form-control formfields",
+        ];
+
         $arrFields[] = [
             "type" => "text",
             "lbl" => "Title",
