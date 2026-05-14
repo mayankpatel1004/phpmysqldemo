@@ -14,10 +14,21 @@ function getRealQuery($sql, $params)
 
     return $sql;
 }
-function saveItemSection($data) {
-    global $pdo;
+function saveItemSection($data,$files) {
+    global $pdo,$site_path;
     $keys = [];
     $values = [];
+
+    if (isset($files['attachment1']) && $files['attachment1']['error'] == 0) {
+        $uploadDir = $site_path."public/uploads/";
+        $tmp_file_name = $files['attachment1']['tmp_name'];
+        $extension = pathinfo($files['attachment1']['name'], PATHINFO_EXTENSION);
+        $newFileName = time() . "_" ."isec_". rand(1000, 9999) . "." . $extension;
+        $targetFile = $uploadDir . $newFileName;
+        if (move_uploaded_file($tmp_file_name, $targetFile)) {
+            $data['attachment1'] = $newFileName;
+        }
+    }
 
     foreach ($data as $key => $value) {
         if ($key === "item_section_id") continue;
@@ -29,6 +40,8 @@ function saveItemSection($data) {
         }
     }
 
+    
+
     if (!empty($data['item_section_id']) && (int)$data['item_section_id'] > 0) {
         $setParts = [];
         foreach ($keys as $k) {
@@ -39,12 +52,6 @@ function saveItemSection($data) {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([...$values, $data['item_section_id']]);
         //echo getRealQuery($sql, [...$values, $data['item_section_id']]);
-        return [
-            "success" => 1,
-            "message" => "Success",
-            "data" => ["item_section_id" => $data['item_section_id']]
-        ];
-
         $arr = array(
             "success" => 1,
             "message" => "Success",
@@ -60,7 +67,7 @@ function saveItemSection($data) {
             $stmt->execute($values);
             $insertedId = $pdo->lastInsertId();
             //echo getRealQuery($sql, $values);
-            
+
             if ($insertedId > 0) {
                 //$section_alias = functions::getTitleAlias($data['section_title']);
                 $section_alias = $data['section_title'];
@@ -109,12 +116,34 @@ function saveItemSection($data) {
 
 
 function saveItemForm($data, $files = [], $headers = []) {
-    global $pdo;
+    global $pdo,$site_path;
 
     try {
         $pdo->beginTransaction();
         $keys = [];
         $values = [];
+
+        if (isset($files['attachment1']) && $files['attachment1']['error'] == 0) {
+            $uploadDir = $site_path."public/uploads/";
+            $tmp_file_name = $files['attachment1']['tmp_name'];
+            $extension = pathinfo($files['attachment1']['name'], PATHINFO_EXTENSION);
+            $newFileName = time() . "_" ."item1_". rand(1000, 9999) . "." . $extension;
+            $targetFile = $uploadDir . $newFileName;
+            if (move_uploaded_file($tmp_file_name, $targetFile)) {
+                $data['attachment1'] = $newFileName;
+            }
+        }
+
+        if (isset($files['attachment2']) && $files['attachment2']['error'] == 0) {
+            $uploadDir = $site_path."public/uploads/";
+            $tmp_file_name = $files['attachment2']['tmp_name'];
+            $extension = pathinfo($files['attachment2']['name'], PATHINFO_EXTENSION);
+            $newFileName = time() . "_" ."item2_". rand(1000, 9999) . "." . $extension;
+            $targetFile = $uploadDir . $newFileName;
+            if (move_uploaded_file($tmp_file_name, $targetFile)) {
+                $data['attachment2'] = $newFileName;
+            }
+        }
 
         foreach ($data as $key => $value) {
             if ($key === "item_id") continue;
@@ -320,8 +349,21 @@ function saveRoleForm($data) {
     }
 }
 
-function saveUserForm($data){
-    global $pdo;
+function saveUserForm($data,$files){
+    global $pdo,$site_path;
+    if (isset($files['user_photo']) && $files['user_photo']['error'] == 0) {
+        $uploadDir = $site_path."public/uploads/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $tmp_file_name = $files['user_photo']['tmp_name'];
+        $extension = pathinfo($files['user_photo']['name'], PATHINFO_EXTENSION);
+        $newFileName = time() . "_" ."user_". rand(1000, 9999) . "." . $extension;
+        $targetFile = $uploadDir . $newFileName;
+        if (move_uploaded_file($tmp_file_name, $targetFile)) {
+            $data['user_photo'] = $newFileName;
+        }
+    }
     try {
         if ((empty($data['edit_id']) || (int)$data['edit_id'] === 0) && defined('USER_EMAIL_UNIQUE') && USER_EMAIL_UNIQUE === "Y") {
             $sqlCheck = "SELECT user_id FROM users WHERE user_email = ? LIMIT 1";

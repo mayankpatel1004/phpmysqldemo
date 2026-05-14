@@ -907,14 +907,9 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
     if($strHeaders){
         include 'database_operation/saveModules.php';
         $data = $_POST;
+        $files = $_FILES;
         unset($data['action']);
-        if (!empty($_FILES['attachment1']['name'])) {
-            $data['attachment1'] = $_FILES['attachment1']['name'];
-        }
-        if (!empty($_FILES['attachment2']['name'])) {
-            $data['attachment2'] = $_FILES['attachment2']['name'];
-        }
-        saveItemSection($data);
+        saveItemSection($data,$files);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);
@@ -928,7 +923,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_form'){
     if($strHeaders){
         include 'form_fields/default_item.php';
         $allFormFields = getFormFields($_GET);
-
+        
         $item_type = "";
         if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
             $item_type = $_GET['item_type'];
@@ -953,15 +948,9 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
     if($strHeaders){
         include 'database_operation/saveModules.php';
         $data = $_POST;
+        $files = $_FILES;
         unset($data['action']);
-        if (!empty($files['attachment1']['name'])) {
-            $data['attachment1'] = $files['attachment1']['name'];
-        }
-
-        if (!empty($files['attachment2']['name'])) {
-            $data['attachment2'] = $files['attachment2']['name'];
-        }
-        saveItemForm($data);
+        saveItemForm($data,$files);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);
@@ -1013,9 +1002,10 @@ if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
     if($strHeaders){
         include 'database_operation/saveModules.php';
         $data = $_POST;
+        $files = $_FILES;
         unset($data['action']);
         unset($data['item_type']);
-        saveUserForm($data);
+        saveUserForm($data,$files);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);
