@@ -162,6 +162,34 @@ if(isset($_GET['action']) && $_GET['action'] == 'site_configurations'){
     exit;
 }
 
+if(isset($_GET['action']) && $_GET['action'] == 'saveconfig'){
+    $data = $_POST;
+    if (empty($data)) {
+        echo json_encode([
+            "status" => false,
+            "message" => "No data received"
+        ]);
+        exit;
+    }
+
+    foreach ($data as $config_name => $config_value) {
+
+        $update = $pdo->prepare("
+            UPDATE site_config 
+            SET config_value = ? 
+            WHERE config_name = ?
+        ");
+
+        $update->execute([$config_value, $config_name]);
+    }
+    echo json_encode([
+        "status" => true,
+        "success"=> 1,
+        "message" => "Configuration saved successfully"
+    ]);
+    exit;
+}
+
 
 if(isset($_GET['action']) && $_GET['action'] == 'itemsfilter'){
 
