@@ -876,123 +876,174 @@ if(isset($_GET['action']) && $_GET['action'] == 'databasefilter'){
 
 if(isset($_GET['action']) && $_GET['action'] == 'item_section_form'){
 
-    include 'form_fields/default_item_section.php';
-    $allFormFields = getFormFields($_GET);
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'form_fields/default_item_section.php';
+        $allFormFields = getFormFields($_GET);
 
-    $item_type = "";
-    if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
-        $item_type = $_GET['item_type'];
+        $item_type = "";
+        if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
+            $item_type = $_GET['item_type'];
+        }
+
+        $arr = array(
+            'success' => 1,
+            'message' => "Data successfully updated",
+            'form_fields' => $allFormFields,
+            'item_type' => $item_type
+        );
+        echo json_encode($arr);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
     }
-
-    $arr = array(
-        'success' => 1,
-        'message' => "Data successfully updated",
-        'form_fields' => $allFormFields,
-        'item_type' => $item_type
-    );
-    echo json_encode($arr);
 }
 
 if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
 
-    include 'database_operation/saveModules.php';
-    $data = $_POST;
-    unset($data['action']);
-    if (!empty($_FILES['attachment1']['name'])) {
-        $data['attachment1'] = $_FILES['attachment1']['name'];
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'database_operation/saveModules.php';
+        $data = $_POST;
+        unset($data['action']);
+        if (!empty($_FILES['attachment1']['name'])) {
+            $data['attachment1'] = $_FILES['attachment1']['name'];
+        }
+        if (!empty($_FILES['attachment2']['name'])) {
+            $data['attachment2'] = $_FILES['attachment2']['name'];
+        }
+        saveItemSection($data);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
     }
-    if (!empty($_FILES['attachment2']['name'])) {
-        $data['attachment2'] = $_FILES['attachment2']['name'];
-    }
-    saveItemSection($data);
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'item_form'){
 
-    include 'form_fields/default_item.php';
-    $allFormFields = getFormFields($_GET);
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'form_fields/default_item.php';
+        $allFormFields = getFormFields($_GET);
 
-    $item_type = "";
-    if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
-        $item_type = $_GET['item_type'];
+        $item_type = "";
+        if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
+            $item_type = $_GET['item_type'];
+        }
+
+        $arr = array(
+            'success' => 1,
+            'message' => "Data successfully updated",
+            'form_fields' => $allFormFields,
+            'item_type' => $item_type
+        );
+        echo json_encode($arr);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
     }
-
-    $arr = array(
-        'success' => 1,
-        'message' => "Data successfully updated",
-        'form_fields' => $allFormFields,
-        'item_type' => $item_type
-    );
-    echo json_encode($arr);
 }
 
 if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'database_operation/saveModules.php';
+        $data = $_POST;
+        unset($data['action']);
+        if (!empty($files['attachment1']['name'])) {
+            $data['attachment1'] = $files['attachment1']['name'];
+        }
 
-    include 'database_operation/saveModules.php';
-    $data = $_POST;
-    unset($data['action']);
-    if (!empty($files['attachment1']['name'])) {
-        $data['attachment1'] = $files['attachment1']['name'];
+        if (!empty($files['attachment2']['name'])) {
+            $data['attachment2'] = $files['attachment2']['name'];
+        }
+        saveItemForm($data);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
     }
-
-    if (!empty($files['attachment2']['name'])) {
-        $data['attachment2'] = $files['attachment2']['name'];
-    }
-    saveItemForm($data);
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'role_form'){
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'form_fields/role.php';
+        $allFormFields = getFormFields($_GET);
 
-    include 'form_fields/role.php';
-    $allFormFields = getFormFields($_GET);
+        $item_type = "";
+        if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
+            $item_type = $_GET['item_type'];
+        }
 
-    $item_type = "";
-    if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
-        $item_type = $_GET['item_type'];
+        $arr = array(
+            'success' => 1,
+            'message' => "Data successfully updated",
+            'form_fields' => $allFormFields,
+            'item_type' => $item_type
+        );
+        echo json_encode($arr);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
     }
-
-    $arr = array(
-        'success' => 1,
-        'message' => "Data successfully updated",
-        'form_fields' => $allFormFields,
-        'item_type' => $item_type
-    );
-    echo json_encode($arr);
 }
 
 if(isset($_POST['action']) && $_POST['action'] == 'role_form'){
-
-    include 'database_operation/saveModules.php';
-    $data = $_POST;
-    unset($data['action']);
-    saveRoleForm($data);
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'database_operation/saveModules.php';
+        $data = $_POST;
+        unset($data['action']);
+        saveRoleForm($data);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
+    }
 }
 
 if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
-
-    include 'database_operation/saveModules.php';
-    $data = $_POST;
-    unset($data['action']);
-    unset($data['item_type']);
-    saveUserForm($data);
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'database_operation/saveModules.php';
+        $data = $_POST;
+        unset($data['action']);
+        unset($data['item_type']);
+        saveUserForm($data);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
+    }
 }
 
 if(isset($_GET['action']) && $_GET['action'] == 'user_form'){
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders){
+        include 'form_fields/user.php';
+        $allFormFields = getFormFields($_GET);
 
-    include 'form_fields/user.php';
-    $allFormFields = getFormFields($_GET);
+        $item_type = "";
+        if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
+            $item_type = $_GET['item_type'];
+        }
 
-    $item_type = "";
-    if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
-        $item_type = $_GET['item_type'];
+        $arr = array(
+            'success' => 1,
+            'message' => "Data successfully updated",
+            'form_fields' => $allFormFields,
+            'item_type' => $item_type
+        );
+        echo json_encode($arr);
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
     }
-
-    $arr = array(
-        'success' => 1,
-        'message' => "Data successfully updated",
-        'form_fields' => $allFormFields,
-        'item_type' => $item_type
-    );
-    echo json_encode($arr);
 }
 ?>

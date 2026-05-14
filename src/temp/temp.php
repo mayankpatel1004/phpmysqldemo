@@ -6,3 +6,9 @@ if($strHeaders){
     $arr = fnInvalidToken();
     echo json_encode($arr);
 }
+
+
+
+if(response.success == 0){
+                    alert(response.message);
+                } 

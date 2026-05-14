@@ -68,6 +68,13 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
             success: function (response1) {
                 hideLoader();
                 let response = JSON.parse(response1); 
+                if(response.success == 0){
+                    swal({
+                        icon: 'error',
+                        title: 'Fail!',
+                        text: response.message || 'An error occurred while saving your data.'
+                    });
+                } 
                 let fields = response.form_fields.fields;
                 let listUrl = "<?php echo $site_url;?>item_section?item_type=default";
                 let html = '';
