@@ -47,7 +47,12 @@
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             success: function (response) {
-                location.reload();
+                let data = JSON.parse(response);
+                if(data.success == 0){
+                    alert(data.message);
+                } else {
+                    location.reload();
+                }
             }
         });
     }

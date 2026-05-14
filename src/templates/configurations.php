@@ -67,14 +67,17 @@ $(document).ready(function() {
         $.ajax({
             type: "POST",
             url: actionUrl,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
             data: form.serialize(),
             success: function (data) {
-                $(".submit-button").val("SUBMIT");
+                $(".submit-button").val("Save");
                 let response = JSON.parse(data);
                 if (response.success == 1) {
                     location.reload();
                 } else {
-                    console.log(response.message);
+                    alert(response.message);
                 }
             }
         });

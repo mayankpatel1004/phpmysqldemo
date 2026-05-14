@@ -15,11 +15,11 @@
                     <div class="row">
                         <div class="col-4 small">
                             New Password
-                            <input type="text" name="password" id="password" class="form-control" placeholder="Enter Password" />
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password" />
                         </div>
                         <div class="col-4 small">
                             Confirm Password
-                            <input type="text" name="cpassword" id="cpassword" class="form-control" placeholder="Enter Confirm Password" />
+                            <input type="password" name="cpassword" id="cpassword" class="form-control" placeholder="Enter Confirm Password" />
                         </div>
                         <div class="col-4 small mt-3">
                             <input type="button" name="submit" class="btn btn-primary" value="Save" onclick="return fnChangePassword()" />

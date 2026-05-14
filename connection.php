@@ -117,6 +117,7 @@ function encodeToken($data, $secret_key) {
     return $token;
 }
 function decodeToken($token, $secret_key) {
+    $token = str_replace('Bearer ', '', trim($token));
     $data = base64_decode($token);
     $iv = substr($data, 0, 16);
     $encrypted = substr($data, 16);
@@ -129,4 +130,41 @@ function decodeToken($token, $secret_key) {
     );
     return json_decode($decrypted, true);
 }
+
+function get_request_headers() {
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+    } else {
+        $headers = [];
+
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) == 'HTTP_') {
+                $header = str_replace(
+                    ' ',
+                    '-',
+                    ucwords(str_replace('_', ' ', strtolower(substr($key, 5))))
+                );
+
+                $headers[$header] = $value;
+            }
+        }
+    }
+
+    return isset($headers['Authorization']) 
+        ? $headers['Authorization'] 
+        : '';
+}
+
+function fnInvalidToken(){
+    $arr = array(
+        'success' => 0,
+        'message' => "Invalid Token",
+        'total_records' => 0,
+        'total_pages' => 0,
+        'current_page_no' => 0,
+        'data' => []
+    );
+    return $arr;
+}
+
 ?>
