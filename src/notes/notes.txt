@@ -24,3 +24,16 @@ Pending :
 User photo upload functionality pending.
 item image upoad pending.
 item section image upload pending.
+
+
+
+http://localhost/phpmysqldemo/routes?action=forgot-password
+
+user_email
+developer112018@yopmail.com
+
+
+
+http://localhost/phpmysqldemo/password-token?user_email=developer112018@yopmail.com
+user_email
+developer112018@yopmail.com

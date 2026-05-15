@@ -94,7 +94,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'reset-password'){
     $user_id = $_POST['user_id'] ?? '';
     $new_password = md5($password);
     $sqlUpdatePassword = "UPDATE users SET user_password = '$new_password',user_token = '' WHERE user_id = '$user_id' AND user_email = '$user_email'";
-    echo $sqlUpdatePassword;
     sqlUpdate($sqlUpdatePassword);
     $data = $_POST;
     $data['success'] = 1;
