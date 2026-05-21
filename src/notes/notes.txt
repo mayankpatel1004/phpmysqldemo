@@ -1,4 +1,5 @@
 git add . && git commit -m "Updates" && git push origin main
+ssh -p 65002 u797036281@82.112.239.225
 
 /opt/lampp/bin/php /opt/lampp/htdocs/phpmysqldemo/src/migrations/migrations.php
 /opt/lampp/bin/php /opt/lampp/htdocs/phpmysqldemo/src/migrations/seeders.php
