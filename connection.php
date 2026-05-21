@@ -117,8 +117,31 @@ function encodeToken($data, $secret_key) {
     return $token;
 }
 function decodeToken($token, $secret_key) {
-    $token = str_replace('Bearer ', '', trim($token));
-    $data = base64_decode($token);
+    $token = trim(str_replace('Bearer', '', $token));
+    //echo $token;exit;
+    if (
+        !isset($token) ||
+        $token === '' ||
+        strtolower($token) == 'null'
+    ) {
+        return [
+            'status' => 0,
+            'message' => 'Invalid Token'
+        ];
+    }
+    $data = base64_decode($token, true);
+    if ($data === false) {
+        return [
+            'status' => 0,
+            'message' => 'Invalid token format'
+        ];
+    }
+    if (strlen($data) < 16) {
+        return [
+            'status' => 0,
+            'message' => 'Invalid token data'
+        ];
+    }
     $iv = substr($data, 0, 16);
     $encrypted = substr($data, 16);
     $decrypted = openssl_decrypt(
@@ -128,7 +151,23 @@ function decodeToken($token, $secret_key) {
         0,
         $iv
     );
-    return json_decode($decrypted, true);
+    if ($decrypted === false) {
+        return [
+            'status' => 0,
+            'message' => 'Token decryption failed'
+        ];
+    }
+    $decoded = json_decode($decrypted, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return [
+            'status' => 0,
+            'message' => 'Invalid token JSON'
+        ];
+    }
+    return [
+        'status' => true,
+        'data' => $decoded
+    ];
 }
 
 function get_request_headers() {

@@ -93,92 +93,102 @@ function getItems() {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
         success: function(response) {
-            let data = JSON.parse(response);
-            hideLoader();
-            $("#loader").hide();
+            let final_response = JSON.parse(response);
+            if(final_response.message == 'Invalid Token'){
+                swal({
+                    icon: 'error',
+                    title: 'Fail!',
+                    text: final_response.message
+                }).then(() => {
+                    window.location.href = "<?php echo $site_url; ?>login";
+                });
+            } else {
+                hideLoader();
+                $("#loader").hide();
 
-            let html = '';
-            $.each(data.configurations, function(parentIndex, parent) {
-                let headingId = 'heading-' + parent.id;
-                let collapseId = 'collapse-' + parent.id;
-                html += `
-            <div class="card">
-                <div class="card-header bg-primary" role="tab" id="${headingId}">
-                    <h6 class="mb-0">
-                        <a data-toggle="collapse"
-                           href="#${collapseId}"
-                           class="text-white"
-                           aria-expanded="${parentIndex == 0 ? 'true' : 'false'}"
-                           aria-controls="${collapseId}">
-                            ${parent.name}
-                        </a>
-                    </h6>
-                </div>
-                <div id="${collapseId}"
-                     class="collapse ${parentIndex == 0 ? 'show' : ''}"
-                     role="tabpanel"
-                     aria-labelledby="${headingId}"
-                     data-parent="#accordion-4">
-                    <div class="card-body">
-                        <div class="row">`;
-
-                // Child Loop
-                $.each(parent.products, function(childIndex, child) {
-
-                    html += `<div class="col-md-6 mb-3">
-                    <div class="border p-3 rounded">
-                        <label><strong>${child.title}</strong></label>`;
-
-                    // Text Input
-                    if (child.input_type == 'text' || child.input_type == 'email') {
-                        html += `
-                    <input type="${child.input_type}"
-                           class="form-control"
-                           name="${child.name}"
-                           value="${child.value}">`;
-                    }
-
-                    // Textarea
-                    else if (child.input_type == 'textarea') {
-                        html += `
-                    <textarea class="form-control"
-                              name="${child.name}"
-                              rows="4">${child.value}</textarea>`;
-                    }
-
-                    // Select
-                    else if (child.input_type == 'select') {
-                        html += `
-                    <select class="form-control"
-                            name="${child.name}">`;
-                        if (child.options != null) {
-                            let options = child.options.split('@=');
-                            $.each(options, function(i, option) {
-                                let selected = (option == child.value) ?
-                                    'selected' : '';
-                                html += `
-                            <option value="${option}" ${selected}>
-                                ${option}
-                            </option>`;
-                            });
-                        }
-                        html += `</select>`;
-                    }
+                let html = '';
+                $.each(final_response.configurations, function(parentIndex, parent) {
+                    let headingId = 'heading-' + parent.id;
+                    let collapseId = 'collapse-' + parent.id;
                     html += `
+                <div class="card">
+                    <div class="card-header bg-primary" role="tab" id="${headingId}">
+                        <h6 class="mb-0">
+                            <a data-toggle="collapse"
+                            href="#${collapseId}"
+                            class="text-white"
+                            aria-expanded="${parentIndex == 0 ? 'true' : 'false'}"
+                            aria-controls="${collapseId}">
+                                ${parent.name}
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="${collapseId}"
+                        class="collapse ${parentIndex == 0 ? 'show' : ''}"
+                        role="tabpanel"
+                        aria-labelledby="${headingId}"
+                        data-parent="#accordion-4">
+                        <div class="card-body">
+                            <div class="row">`;
+
+                    // Child Loop
+                    $.each(parent.products, function(childIndex, child) {
+
+                        html += `<div class="col-md-6 mb-3">
+                        <div class="border p-3 rounded">
+                            <label><strong>${child.title}</strong></label>`;
+
+                        // Text Input
+                        if (child.input_type == 'text' || child.input_type == 'email') {
+                            html += `
+                        <input type="${child.input_type}"
+                            class="form-control"
+                            name="${child.name}"
+                            value="${child.value}">`;
+                        }
+
+                        // Textarea
+                        else if (child.input_type == 'textarea') {
+                            html += `
+                        <textarea class="form-control"
+                                name="${child.name}"
+                                rows="4">${child.value}</textarea>`;
+                        }
+
+                        // Select
+                        else if (child.input_type == 'select') {
+                            html += `
+                        <select class="form-control"
+                                name="${child.name}">`;
+                            if (child.options != null) {
+                                let options = child.options.split('@=');
+                                $.each(options, function(i, option) {
+                                    let selected = (option == child.value) ?
+                                        'selected' : '';
+                                    html += `
+                                <option value="${option}" ${selected}>
+                                    ${option}
+                                </option>`;
+                                });
+                            }
+                            html += `</select>`;
+                        }
+                        html += `
+                        </div>
+                    </div>`;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
                     </div>
                 </div>`;
                 });
 
-                html += `
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-            });
-
-            // Append HTML
-            $('#accordionresponse').html(html);
-            $(".submit-button").removeClass('d-none');
+                // Append HTML
+                $('#accordionresponse').html(html);
+                $(".submit-button").removeClass('d-none');   
+            }
         }
     });
 }

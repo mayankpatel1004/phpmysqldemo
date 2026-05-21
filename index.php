@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+
 if (file_exists($site_path.'src/functions/common_functions.php')) {
     require_once $site_path.'src/functions/common_functions.php';
 } else {

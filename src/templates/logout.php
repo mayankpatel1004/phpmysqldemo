@@ -19,5 +19,6 @@ unset($_SESSION['user']);
             localStorage.removeItem("token");
             window.location.href = '<?php echo $site_url."login";?>';
         }
+        window.location.href = '<?php echo $site_url."login";?>';
     });
   </script>

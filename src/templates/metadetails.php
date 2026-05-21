@@ -74,32 +74,41 @@
             success: function (response) {
                 hideLoader();
                 let final_response = JSON.parse(response);
-                let all_columns = final_response.columns;
-                let all_rows = final_response.data;
-                
-
-                let columns_html = '';
-                if(all_columns && all_columns.length > 0){
-                    all_columns.forEach((field) => {
-                        columns_html += `<td class="text-white font-weight-bold">${field}</td>`;
+                if(final_response.message == 'Invalid Token'){
+                    swal({
+                        icon: 'error',
+                        title: 'Fail!',
+                        text: final_response.message
+                    }).then(() => {
+                        window.location.href = "<?php echo $site_url; ?>login";
                     });
-                    $("#all_columns").html(columns_html);
+                } else {
+                    let all_columns = final_response.columns;
+                    let all_rows = final_response.data;
+
+                    let columns_html = '';
+                    if(all_columns && all_columns.length > 0){
+                        all_columns.forEach((field) => {
+                            columns_html += `<td class="text-white font-weight-bold">${field}</td>`;
+                        });
+                        $("#all_columns").html(columns_html);
+                    }
+
+                    let html = '';
+                    all_rows.forEach(item => {
+                        html += `<tr>
+                            <td>${item.meta_id}</td>
+                            <td><input type="text" class="form-control-sm w-100 formfields" value="${item.page_title}" name="page_title" id="page_title__${item.meta_id}" /></td>
+                            <td>${item.sidebar_title}</td>
+                            <td>${item.end_points}</td>
+                            <td><input type="text" class="form-control-sm w-100 formfields" value="${item.meta_title}" name="meta_title" id="meta_title__${item.meta_id}" /></td>
+                            <td><input type="text" class="form-control-sm w-100 formfields" value="${item.meta_description}" name="meta_description" id="meta_description__${item.meta_id}" /></td>
+                            <td>${item.sidebar_order}</td>
+                        </tr>`;
+                    });
+
+                    $("#all_rows").html(html);   
                 }
-
-                let html = '';
-                all_rows.forEach(item => {
-                    html += `<tr>
-                        <td>${item.meta_id}</td>
-                        <td><input type="text" class="form-control-sm w-100 formfields" value="${item.page_title}" name="page_title" id="page_title__${item.meta_id}" /></td>
-                        <td>${item.sidebar_title}</td>
-                        <td>${item.end_points}</td>
-                        <td><input type="text" class="form-control-sm w-100 formfields" value="${item.meta_title}" name="meta_title" id="meta_title__${item.meta_id}" /></td>
-                        <td><input type="text" class="form-control-sm w-100 formfields" value="${item.meta_description}" name="meta_description" id="meta_description__${item.meta_id}" /></td>
-                        <td>${item.sidebar_order}</td>
-                    </tr>`;
-                });
-
-                $("#all_rows").html(html);
             }
         });
     }

@@ -139,53 +139,63 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                 hideLoader();
                 let counter = 0;
                 let final_response = JSON.parse(response);
-                let items = final_response.data;
-                if (items && items.length > 0) {
-                    $.each(items, function (index, item) {
-                        counter++;
-                        let edit_url = `<?php echo $site_url;?>item_section_form?edit_id=${item.item_section_id}&item_type=${item.item_type}`;
-                        $("#listing_display_data").append(`<tr>
-                            
-                            <td><input type="checkbox" class="checkbox_css item ml-3 sales_summary_list_checkbox" name="chk[]" id="chk_${item.item_section_id}" accept="allitems" value="${item.item_section_id}" /></td>
-
-                            <td><a href="${edit_url}">${item.section_title}</a></td>
-
-                            <td>${item.item_type}</td>
-                            
-                            <td>${item.display_order}</td>
-                            
-                            <td><span class="badge badge-${item.display_status == 'Yes' ? 'success' : 'danger'}">${item.display_status}</span></td>
-                            
-                            <td>${item.created_at}</td>
-                            
-                            <td>${item.updated_at}</td>
-                            
-                            <td>${counter}</td>
-                            
-                            <td>${item.item_section_id}</td>
-
-                        </tr>`);
+                if(final_response.message == 'Invalid Token'){
+                    swal({
+                        icon: 'error',
+                        title: 'Fail!',
+                        text: final_response.message
+                    }).then(() => {
+                        window.location.href = "<?php echo $site_url; ?>login";
                     });
-
-                    let page_number = $("#current_page_no").val();
-                    if (final_response.total_pages == 1) {
-                        pagination_html += `<option value="1">1</option>`;
-                    } else {
-                        pagination_html += `<option value="">Go To</option>`;
-                        for (var i=1;i<=final_response.total_pages;i++){
-                            pagination_html += `<option value="${parseInt(i)}">${parseInt(i)}</option>`;
-                        }
-                    }
-                    $("#current_page_no").html(pagination_html);
-                    $("#current_page_no").val(final_response.current_page_no);
                 } else {
-                    $("#listing_display_data").html(`
-                    <tr>
-                    <td colspan="100%" class="text-center text-secondary">No Data Found</td>
-                    </tr>
-                `);
+                    let items = final_response.data;
+                    if (items && items.length > 0) {
+                        $.each(items, function (index, item) {
+                            counter++;
+                            let edit_url = `<?php echo $site_url;?>item_section_form?edit_id=${item.item_section_id}&item_type=${item.item_type}`;
+                            $("#listing_display_data").append(`<tr>
+                                
+                                <td><input type="checkbox" class="checkbox_css item ml-3 sales_summary_list_checkbox" name="chk[]" id="chk_${item.item_section_id}" accept="allitems" value="${item.item_section_id}" /></td>
+
+                                <td><a href="${edit_url}">${item.section_title}</a></td>
+
+                                <td>${item.item_type}</td>
+                                
+                                <td>${item.display_order}</td>
+                                
+                                <td><span class="badge badge-${item.display_status == 'Yes' ? 'success' : 'danger'}">${item.display_status}</span></td>
+                                
+                                <td>${item.created_at}</td>
+                                
+                                <td>${item.updated_at}</td>
+                                
+                                <td>${counter}</td>
+                                
+                                <td>${item.item_section_id}</td>
+
+                            </tr>`);
+                        });
+
+                        let page_number = $("#current_page_no").val();
+                        if (final_response.total_pages == 1) {
+                            pagination_html += `<option value="1">1</option>`;
+                        } else {
+                            pagination_html += `<option value="">Go To</option>`;
+                            for (var i=1;i<=final_response.total_pages;i++){
+                                pagination_html += `<option value="${parseInt(i)}">${parseInt(i)}</option>`;
+                            }
+                        }
+                        $("#current_page_no").html(pagination_html);
+                        $("#current_page_no").val(final_response.current_page_no);
+                    } else {
+                        $("#listing_display_data").html(`
+                        <tr>
+                        <td colspan="100%" class="text-center text-secondary">No Data Found</td>
+                        </tr>
+                    `);
+                    }
+                    $("#loader").hide();
                 }
-                $("#loader").hide();
             }
         });
     }

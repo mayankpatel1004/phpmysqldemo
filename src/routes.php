@@ -105,7 +105,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'reset-password'){
 if(isset($_GET['action']) && $_GET['action'] == 'site_configurations'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $parentsMap = [];
         $sqlParentConfigurations = "
             SELECT 
@@ -172,7 +172,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'saveconfig'){
     
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $data = $_POST;
         if(isset($data) && $data != false){
             foreach ($data as $config_name => $config_value) {
@@ -208,7 +208,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'saveconfig'){
 if(isset($_GET['action']) && $_GET['action'] == 'itemsfilter'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $searchKeywordString = '';
         $success = '';
         $message = '';
@@ -359,7 +359,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemsfilter'){
 if(isset($_GET['action']) && $_GET['action'] == 'itemssectionfilter'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $searchKeywordString = '';
         $success = '';
         $message = '';
@@ -511,7 +511,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'userfilter'){
 
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $searchKeywordString = '';
         $success = '';
         $message = '';
@@ -646,7 +646,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
 
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $searchKeywordString = '';
         $success = '';
         $message = '';
@@ -779,7 +779,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
 if(isset($_GET['action']) && $_GET['action'] == 'metadetailsfilter'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $sqlMetaDetail = "SELECT * FROM meta_details";
         $arrData = sqlSelect($sqlMetaDetail);
         $arrColumns = array('MetaID','Title','Sidebar Title','URL','Meta Title','Meta Description','Order');
@@ -818,7 +818,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'metadetailsfilter'){
 if(isset($_GET['action']) && $_GET['action'] == 'changepassword'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $password = md5($_POST['password']);
         $user_id = $_POST['user_id'];
         $sql = "UPDATE users SET `user_password` = :password WHERE user_id = :user_id";
@@ -841,7 +841,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'changepassword'){
 if(isset($_GET['action']) && $_GET['action'] == 'databasefilter'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $arrColumns = [];
         $arrData = [];
         $arrDataValues = [];
@@ -877,7 +877,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_section_form'){
 
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'form_fields/default_item_section.php';
         $allFormFields = getFormFields($_GET);
 
@@ -903,7 +903,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
 
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'database_operation/saveModules.php';
         $data = $_POST;
         $files = $_FILES;
@@ -919,7 +919,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_form'){
 
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'form_fields/default_item.php';
         $allFormFields = getFormFields($_GET);
         
@@ -944,7 +944,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_form'){
 if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'database_operation/saveModules.php';
         $data = $_POST;
         $files = $_FILES;
@@ -959,7 +959,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
 if(isset($_GET['action']) && $_GET['action'] == 'role_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'form_fields/role.php';
         $allFormFields = getFormFields($_GET);
 
@@ -984,7 +984,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'role_form'){
 if(isset($_POST['action']) && $_POST['action'] == 'role_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'database_operation/saveModules.php';
         $data = $_POST;
         unset($data['action']);
@@ -998,7 +998,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'role_form'){
 if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'database_operation/saveModules.php';
         $data = $_POST;
         $files = $_FILES;
@@ -1014,7 +1014,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
 if(isset($_GET['action']) && $_GET['action'] == 'user_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
-    if($strHeaders){
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         include 'form_fields/user.php';
         $allFormFields = getFormFields($_GET);
 
