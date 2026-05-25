@@ -168,6 +168,23 @@ if(isset($_GET['action']) && $_GET['action'] == 'site_configurations'){
     }
 }
 
+
+if(isset($_GET['action']) && $_GET['action'] == 'dashboardfilter'){
+    $strHeaders = get_request_headers();
+    $arrTokenData = decodeToken($strHeaders,$secret_key);
+    if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
+        echo json_encode([
+            "status" => true,
+            "success"=> 1,
+            "message" => "Data not found"
+        ]);
+        exit;
+    } else {
+        $arr = fnInvalidToken();
+        echo json_encode($arr);
+    }
+}
+
 if(isset($_GET['action']) && $_GET['action'] == 'saveconfig'){
     
     $strHeaders = get_request_headers();
