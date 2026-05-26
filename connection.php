@@ -7,7 +7,8 @@ $dbname = 'u797036281_demo';
 $username = 'u797036281_demo';
 $password = 'Online@112018';
 
-$isLocal = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1', '::1']) || getenv('APP_ENV') === 'local';
+$isLocal = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1', '::1']);
+
 if($isLocal){
     $host = 'localhost';
     $dbname = 'Demonstration';
@@ -28,16 +29,18 @@ $smtp_secure = "ssl";
 $smtp_auth = true;
 
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$host = $_SERVER['HTTP_HOST'];
+$http_host = $_SERVER['HTTP_HOST'];            // ✅ separate variable for HTTP host
 $baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 $records_per_page = 10;
 $allow_delete_record = "N";
 
-$site_url = $protocol . $host . $baseDir . '/';
+$site_url = $protocol . $http_host . $baseDir . '/';  // ✅ uses correct HTTP host
 $site_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
 
-// db (Data Source Name)
-$db = "mysql:host=$host;dbname=$dbname;charset=$charset";
+// Keep the original database host (set earlier, e.g., 'localhost')
+// Do NOT overwrite $dbHost
+$dbHost = $host;   // $host still holds the correct DB host from the top of your script
+$db = "mysql:host=$dbHost;dbname=$dbname;charset=$charset";  // ✅ uses real DB host
 
 // PDO options
 $options = [
