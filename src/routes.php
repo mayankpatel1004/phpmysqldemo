@@ -629,9 +629,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'userfilter'){
             allow_delete
         FROM users
         WHERE 1=1 
-            ${searchKeywordString}
+            $searchKeywordString
             AND deleted_status = 'N'
-            ${orderByString}";
+            $orderByString";
         $arrTotalRecords = sqlSelect($sqlTotalRecords);
 
         $sqlList = $sqlTotalRecords. $limitString;
@@ -763,9 +763,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
             DATE_FORMAT(updated_at, '%d/%m/%y') AS updated_at
         FROM role
         WHERE 1=1 
-            ${searchKeywordString}
+            $searchKeywordString
             AND deleted_status = 'N'
-            ${orderByString}";
+            $orderByString";
         $arrTotalRecords = sqlSelect($sqlTotalRecords);
 
         $sqlList = $sqlTotalRecords. $limitString;

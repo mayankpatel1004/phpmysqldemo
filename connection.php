@@ -1,19 +1,35 @@
 <?php
 session_start();
-ini_set("display_errors",1);
 
-$host = 'localhost';
-$dbname = 'u797036281_demo';
-$username = 'u797036281_demo';
-$password = 'Online@112018';
-
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$http_host = $_SERVER['HTTP_HOST'];
 $isLocal = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1', '::1']);
+$baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+$site_url = $protocol . $http_host . $baseDir . '/';
+$site_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
 
 if($isLocal){
     $host = 'localhost';
     $dbname = 'Demonstration';
     $username = 'developer';
     $password = 'Online@112018';
+    ini_set("display_errors",1);
+    error_reporting(E_ALL);
+    ini_set('log_errors', '1'); 
+    $errorLogPath = $site_path . "src/logs/error.log";
+    $logDir = dirname($errorLogPath);
+    if (!is_dir($logDir)) {mkdir($logDir, 0755, true);}
+    if (!file_exists($errorLogPath)) {
+        touch($errorLogPath);
+        chmod($errorLogPath, 0644);
+    }
+    ini_set('error_log', $errorLogPath);
+} else {
+    $host = 'localhost';
+    $dbname = 'u797036281_demo';
+    $username = 'u797036281_demo';
+    $password = 'Online@112018';
+    ini_set("display_errors",0);
 }
 
 $charset = 'utf8mb4';
@@ -28,25 +44,15 @@ $email_password = "Cloud@112018";
 $smtp_secure = "ssl";
 $smtp_auth = true;
 
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$http_host = $_SERVER['HTTP_HOST'];            // ✅ separate variable for HTTP host
-$baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+
 $records_per_page = 10;
 $allow_delete_record = "N";
 
-$site_url = $protocol . $http_host . $baseDir . '/';  // ✅ uses correct HTTP host
-$site_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
-
-// Keep the original database host (set earlier, e.g., 'localhost')
-// Do NOT overwrite $dbHost
-$dbHost = $host;   // $host still holds the correct DB host from the top of your script
-$db = "mysql:host=$dbHost;dbname=$dbname;charset=$charset";  // ✅ uses real DB host
-
-// PDO options
+$db = "mysql:host=$host;dbname=$dbname;charset=$charset";
 $options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Throw exceptions on errors
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Fetch associative arrays by default
-    PDO::ATTR_EMULATE_PREPARES   => false,                  // Use native prepared statements
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
 try {
@@ -55,7 +61,6 @@ try {
     error_log("PDO Connection Error: " . $e->getMessage());
     die("Database connection failed. Please try again later.");
 }
-
 
 function sqlSelect($sql,$fetchMode = PDO::FETCH_ASSOC) {
     try {
