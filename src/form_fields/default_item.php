@@ -96,24 +96,6 @@ function getFormFields($request) {
         ];
 
         $arrFields[] = [
-            "type" => in_array($item_type, ['default','page','blog']) ? "textarea" : "hidden",
-            "lbl" => "Description",
-            "nm" => "item_description",
-            "val" => $item_description,
-            "req" => "Y",
-            "cls" => "form-control formfields"
-        ];
-
-        $arrFields[] = [
-            "type" => in_array($item_type, ['default','page','blog']) ? "textarea" : "hidden",
-            "lbl" => "Short Description",
-            "nm" => "item_shortdescription",
-            "val" => $item_shortdescription,
-            "req" => "Y",
-            "cls" => "form-control formfields"
-        ];
-
-        $arrFields[] = [
             "type" => in_array($item_type, ['default','page','blog']) ? "file" : "hidden",
             "lbl" => "Attachment1",
             "nm" => "attachment1",
@@ -210,6 +192,24 @@ function getFormFields($request) {
             "type" => "hidden",
             "nm" => "user_id",
             "val" => $user_id
+        ];
+
+        $arrFields[] = [
+            "type" => in_array($item_type, ['default','page','blog']) ? "textarea" : "hidden",
+            "lbl" => "Description",
+            "nm" => "item_description",
+            "val" => $item_description,
+            "req" => "Y",
+            "cls" => "form-control summernoteExample formfields"
+        ];
+
+        $arrFields[] = [
+            "type" => in_array($item_type, ['default','page','blog']) ? "textarea" : "hidden",
+            "lbl" => "Short Description",
+            "nm" => "item_shortdescription",
+            "val" => $item_shortdescription,
+            "req" => "Y",
+            "cls" => "form-control formfields"
         ];
 
         // Response data (similar to Node)

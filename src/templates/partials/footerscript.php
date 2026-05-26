@@ -7,9 +7,10 @@
 <script src="./public/assets/vendors/sweetalert/sweetalert.min.js"></script>
 <script src="./public/assets/vendors/select2/select2.min.js"></script>
 <script src="./public/assets/js/dashboard.js"></script>
-<script type="text/javascript">
-$("#localstorage_company_details").html("Welcome "+localStorage.getItem('user_name'));
 
+<script type="text/javascript">
+
+$("#localstorage_company_details").html("Welcome "+localStorage.getItem('user_name'));
 
 // Below is check and uncheall code start //
 $("#selectAll").on("change", function () {

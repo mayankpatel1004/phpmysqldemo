@@ -1,5 +1,4 @@
 <?php
-
 function saveItemSection($data,$files) {
     global $pdo,$site_path;
     $now = date('Y-m-d H:i:s');

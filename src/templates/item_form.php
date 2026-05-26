@@ -1,4 +1,5 @@
 <?php include 'partials/header.php';?>
+<link rel="stylesheet" href="./public/assets/vendors/summernote/dist/summernote-bs4.css">
 <?php
 $item_type = "";
 $edit_id = 0;
@@ -48,6 +49,8 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
     </div>
 </div>
 <?php include 'partials/footerscript.php';?>
+<script src="./public/assets/vendors/summernote/dist/summernote-bs4.min.js"></script>
+
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(){
         setTimeout(function(){
@@ -78,13 +81,18 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
                 let html = '';
 
                 $.each(fields, function (i, field) {
-
+                    
                     let isHidden = field.type === "hidden";
                     let required = field.req === "Y" ? "required" : "";
                     let requiredStar = field.req === "Y" ? '<span class="text-danger">*</span>' : '';
                     let colClass = isHidden ? 'd-none' : '';
 
-                    html += `<div class="col-md-3 ${colClass}">`;
+                    
+                    let colss = 3;
+                    if(field.type === "textarea"){
+                        colss = 12;
+                    }
+                    html += `<div class="col-md-${colss} ${colClass}">`;
 
                     // LABEL (except hidden)
                     if (!isHidden && field.type !== "checkbox") {
@@ -135,6 +143,14 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
                             <input type="checkbox" id="${field.nm}" class="formfields"
                                 name="${field.nm}" ${required}>
                         `;
+                    }
+
+                    else if (field.type === "textarea") {
+                        html += `<textarea 
+                        id="${field.nm}" 
+                        class="${field.cls}" 
+                        name="${field.nm}" 
+                        ${required}>${field.val}</textarea>`;
                     }
 
                     // INPUT (text, file, hidden, etc.)
@@ -251,5 +267,17 @@ if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0){
     }
 
     </script>
+    <script>
+    $(document).ready(function(){
+        setTimeout(function(){
+            if ($(".summernoteExample").length) {
+                $('.summernoteExample').summernote({
+                    height: 300,
+                    tabsize: 2
+                });
+            }
+        },2000);
+    });
+</script>
 </body>
 </html>
