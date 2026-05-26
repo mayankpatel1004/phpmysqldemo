@@ -6,7 +6,8 @@ if (php_sapi_name() !== 'cli') {
 
 echo "--- Starting Migration ---\n";
 
-include '/opt/lampp/htdocs/phpmysqldemo/connection.php';
+//include '/opt/lampp/htdocs/phpmysqldemo/connection.php';
+include './connection.php';
 migrate($pdo);
 
 function migrate(PDO $pdo)
@@ -33,11 +34,11 @@ function migrate(PDO $pdo)
                 published_end_at DATE DEFAULT NULL,
                 meta_title VARCHAR(255) DEFAULT NULL,
                 meta_description TEXT DEFAULT NULL,
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 created_by INT NOT NULL DEFAULT 0,
                 created_by_name VARCHAR(255) DEFAULT NULL,
                 created_by_role INT NOT NULL DEFAULT 0,
-                display_order INT NOT NULL DEFAULT 0,
-                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
                 deleted_by INT NOT NULL DEFAULT 0,
                 deleted_by_name VARCHAR(255) DEFAULT NULL,
@@ -61,14 +62,16 @@ function migrate(PDO $pdo)
                 record_id INT NOT NULL DEFAULT 0,
                 table_name VARCHAR(255) DEFAULT NULL,
                 record_name VARCHAR(255) DEFAULT NULL,
-                created_by INT NOT NULL DEFAULT 0,
                 display_order INT NOT NULL DEFAULT 0,
                 display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
                 deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
                 deleted_by INT NOT NULL DEFAULT 0,
                 deleted_by_name VARCHAR(255) DEFAULT NULL,
                 deleted_time DATETIME DEFAULT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT NULL,
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         ";
@@ -91,10 +94,10 @@ function migrate(PDO $pdo)
                 description TEXT DEFAULT NULL,
                 attachment1 VARCHAR(255) DEFAULT NULL,
                 user_id INT DEFAULT 0,
-                display_order INT DEFAULT 0,
-                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 meta_title VARCHAR(255) DEFAULT NULL,
                 meta_description TEXT DEFAULT NULL,
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 created_by INT NOT NULL DEFAULT 0,
                 created_by_name VARCHAR(255) DEFAULT NULL,
                 created_by_role INT NOT NULL DEFAULT 0,
@@ -120,11 +123,17 @@ function migrate(PDO $pdo)
                 site_id INT NOT NULL DEFAULT 0,
                 item_id BIGINT NOT NULL DEFAULT 0,
                 section_id BIGINT NOT NULL DEFAULT 0,
+                display_order INT NOT NULL DEFAULT 0,
                 display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
                 deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
                 deleted_by INT NOT NULL DEFAULT 0,
                 deleted_by_name VARCHAR(255) DEFAULT NULL,
-                deleted_time DATETIME DEFAULT NULL
+                deleted_time DATETIME DEFAULT NULL,
+                created_at DATETIME DEFAULT NULL,
+                updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         ";
         $pdo->exec($sql);
@@ -149,7 +158,17 @@ function migrate(PDO $pdo)
                 sidebar_order INT NOT NULL DEFAULT 0,
                 params VARCHAR(255) DEFAULT NULL,
                 is_module SMALLINT NOT NULL DEFAULT 0,
-                deleted_status VARCHAR(4) NOT NULL DEFAULT 'N'
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
+                deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
+                deleted_by INT NOT NULL DEFAULT 0,
+                deleted_by_name VARCHAR(255) DEFAULT NULL,
+                deleted_time DATETIME DEFAULT NULL,
+                created_at DATETIME DEFAULT NULL,
+                updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         ";
         $pdo->exec($sql);
@@ -167,12 +186,14 @@ function migrate(PDO $pdo)
                 role_title VARCHAR(255) DEFAULT NULL,
                 item_alias VARCHAR(255) DEFAULT NULL,
                 item_type VARCHAR(255) NOT NULL DEFAULT 'role',
-                display_order INT NOT NULL DEFAULT 0,
-                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 display_on_listing VARCHAR(1) NOT NULL DEFAULT 'Y',
                 show_action_checkbox VARCHAR(1) NOT NULL DEFAULT 'Y',
                 allow_delete VARCHAR(1) NOT NULL DEFAULT 'Y',
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
                 deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
                 deleted_by INT NOT NULL DEFAULT 0,
                 deleted_by_name VARCHAR(255) DEFAULT NULL,
@@ -201,7 +222,13 @@ function migrate(PDO $pdo)
                 grant_view VARCHAR(1) NOT NULL DEFAULT 'N',
                 display_order INT NOT NULL DEFAULT 0,
                 display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
                 deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
+                deleted_by INT NOT NULL DEFAULT 0,
+                deleted_by_name VARCHAR(255) DEFAULT NULL,
+                deleted_time DATETIME DEFAULT NULL,
                 created_at DATETIME DEFAULT NULL,
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
@@ -225,17 +252,23 @@ function migrate(PDO $pdo)
                 size INT NOT NULL DEFAULT 100,
                 maxlength INT NOT NULL DEFAULT 100,
                 input_type_title VARCHAR(100) DEFAULT NULL,
-                class VARCHAR(100) DEFAULT 'textbox',
+                classname VARCHAR(100) DEFAULT 'textbox',
                 required VARCHAR(1) DEFAULT 'O',
-                display_order INT NOT NULL DEFAULT 0,
                 comments VARCHAR(255) DEFAULT NULL,
-                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 additional VARCHAR(100) DEFAULT NULL,
                 display_on_dashboard VARCHAR(1) NOT NULL DEFAULT 'N',
                 display_on_third_party VARCHAR(1) NOT NULL DEFAULT 'N',
                 site_config_parent_id SMALLINT NOT NULL DEFAULT 0,
-                deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
                 root_user_only VARCHAR(1) NOT NULL DEFAULT 'N',
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
+                deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
+                deleted_by INT NOT NULL DEFAULT 0,
+                deleted_by_name VARCHAR(255) DEFAULT NULL,
+                deleted_time DATETIME DEFAULT NULL,
                 created_at DATETIME DEFAULT NULL,
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
@@ -253,13 +286,19 @@ function migrate(PDO $pdo)
                 site_config_parent_id INT AUTO_INCREMENT PRIMARY KEY,
                 site_id INT NOT NULL,
                 site_config_title VARCHAR(191) NOT NULL,
-                display_order INT NOT NULL,
-                display_status VARCHAR(1) NOT NULL,
-                class VARCHAR(191) NOT NULL,
-                deleted_status VARCHAR(1) NOT NULL,
+                classname VARCHAR(191) NOT NULL,
                 root_user_only VARCHAR(1) NOT NULL,
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
+                deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
+                deleted_by INT NOT NULL DEFAULT 0,
+                deleted_by_name VARCHAR(255) DEFAULT NULL,
+                deleted_time DATETIME DEFAULT NULL,
                 created_at DATETIME DEFAULT NULL,
-                updated_at DATETIME DEFAULT NULL
+                updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         ";
         $pdo->exec($sql);
@@ -285,14 +324,17 @@ function migrate(PDO $pdo)
                 user_role_id SMALLINT NOT NULL DEFAULT 0,
                 is_developer_account VARCHAR(1) NOT NULL DEFAULT 'N',
                 allow_delete VARCHAR(1) NOT NULL DEFAULT 'Y',
+                web_or_app VARCHAR(4) NOT NULL DEFAULT 'App',
+                active_status VARCHAR(25) NOT NULL DEFAULT 'N',
+                display_order INT NOT NULL DEFAULT 0,
+                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
                 created_by INT NOT NULL DEFAULT 0,
                 created_by_name VARCHAR(255) DEFAULT NULL,
                 created_by_role INT NOT NULL DEFAULT 0,
-                web_or_app VARCHAR(4) NOT NULL DEFAULT 'App',
-                active_status VARCHAR(25) NOT NULL DEFAULT 'N',
-                display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
+                deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
+                deleted_by INT NOT NULL DEFAULT 0,
+                deleted_by_name VARCHAR(255) DEFAULT NULL,
                 deleted_time DATETIME DEFAULT NULL,
-                deleted_status VARCHAR(4) NOT NULL DEFAULT 'N',
                 created_at DATETIME DEFAULT NULL,
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
@@ -351,15 +393,18 @@ function migrate(PDO $pdo)
                 device_name VARCHAR(255) DEFAULT NULL,
                 item_type VARCHAR(25) NOT NULL DEFAULT 'users',
                 wallet_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+                blocked VARCHAR(1) NOT NULL DEFAULT 'N',
                 display_order INT NOT NULL DEFAULT 0,
                 display_status VARCHAR(1) NOT NULL DEFAULT 'Y',
-                blocked VARCHAR(1) NOT NULL DEFAULT 'N',
+                created_by INT NOT NULL DEFAULT 0,
+                created_by_name VARCHAR(255) DEFAULT NULL,
+                created_by_role INT NOT NULL DEFAULT 0,
                 deleted_status VARCHAR(1) NOT NULL DEFAULT 'N',
                 deleted_by INT NOT NULL DEFAULT 0,
                 deleted_by_name VARCHAR(255) DEFAULT NULL,
                 deleted_time DATETIME DEFAULT NULL,
                 created_at DATETIME DEFAULT NULL,
-                updated_at DATETIME DEFAULT NULL
+                updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         ";
         $pdo->exec($sql);

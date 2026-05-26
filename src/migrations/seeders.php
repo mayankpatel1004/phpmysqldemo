@@ -6,7 +6,8 @@ if (php_sapi_name() !== 'cli') {
 
 echo "--- Starting Migration ---\n";
 
-include '/opt/lampp/htdocs/phpmysqldemo/connection.php';
+//include '/opt/lampp/htdocs/phpmysqldemo/connection.php';
+include './connection.php';
 seed($pdo);
 function seed(PDO $pdo)
 {
@@ -49,21 +50,25 @@ function seed(PDO $pdo)
         $count = $stmt->fetchColumn();
         if ($count == 0) {
             $sql = "INSERT INTO site_config_parent (
-                site_id, site_config_title, display_order, display_status, class,
-                deleted_status, root_user_only, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                site_id,
+                site_config_title,
+                display_order,
+                display_status,
+                classname,
+                deleted_status,
+                root_user_only
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             $configParentValues = [
-                [0, 'Frontend Settings', 1, 'Y', 'collapseOne', 'N', 'N', null, null],
-                [0, 'Backend Settings', 2, 'Y', 'collapseTwo', 'N', 'N', null, null],
-                [0, 'SEO Settings', 3, 'Y', 'collapseThree', 'N', 'N', null, null],
-                [0, 'Security Settings', 4, 'Y', 'collapseFour', 'N', 'Y', null, null],
-                [0, 'Site Details', 7, 'Y', 'collapseSeven', 'N', 'N', null, null],
-                [0, 'Privacy Settings', 9, 'Y', 'collapseNine', 'N', 'Y', null, null],
-                [0, 'Follow Us', 10, 'Y', 'collapseTen', 'N', 'Y', null, null],
-                [0, 'Email Settings', 8, 'Y', 'collapseEight', 'N', 'N', null, null]
+                [0, 'Frontend Settings', 1, 'Y', 'collapseOne', 'N', 'N'],
+                [0, 'Backend Settings', 2, 'Y', 'collapseTwo', 'N', 'N'],
+                [0, 'SEO Settings', 3, 'Y', 'collapseThree', 'N', 'N'],
+                [0, 'Security Settings', 4, 'Y', 'collapseFour', 'N', 'Y'],
+                [0, 'Site Details', 7, 'Y', 'collapseSeven', 'N', 'N'],
+                [0, 'Privacy Settings', 9, 'Y', 'collapseNine', 'N', 'Y'],
+                [0, 'Follow Us', 10, 'Y', 'collapseTen', 'N', 'Y'],
+                [0, 'Email Settings', 8, 'Y', 'collapseEight', 'N', 'N']
             ];
-
             $stmt = $pdo->prepare($sql);
             foreach ($configParentValues as $row) {
                 $stmt->execute($row);
@@ -83,7 +88,7 @@ function seed(PDO $pdo)
         if ($count == 0) {
             $sql = "INSERT INTO site_config (
                 site_id, config_title, config_name, config_value, input_type, size,
-                maxlength, input_type_title, class, required, display_order, comments,
+                maxlength, input_type_title, classname, required, display_order, comments,
                 display_status, additional, display_on_dashboard, display_on_third_party,
                 site_config_parent_id, deleted_status, root_user_only, created_at, updated_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -215,10 +220,7 @@ function seed(PDO $pdo)
         $stmt = $pdo->query("SELECT COUNT(*) as count FROM meta_details");
         $count = $stmt->fetchColumn();
         if ($count == 0) {
-            $sql = "INSERT INTO meta_details (
-                site_id, parent_id, end_points, page_title, meta_title, meta_description,
-                sidebar_title, sidebar_icon, sidebar_order, params, is_module, deleted_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO meta_details (site_id, parent_id, end_points, page_title, meta_title, meta_description, sidebar_title, sidebar_icon, sidebar_order, params, is_module, deleted_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $metaDetailsValues = [
                 [0, 0, '/', 'Dashboard', 'Dashboard', 'Dashboard', 'Dashboard', 'mdi-view-dashboard', 1, null, 1, 'N'],
@@ -254,7 +256,6 @@ function seed(PDO $pdo)
                 [0, -1, '/template', 'Templates', 'Templates', 'Templates', 'Templates', 'ui-basic', 401, null, 1, 'Y'],
                 [0, 0, '/items', 'Demonstration Company', 'Demonstration Company', 'Demonstration Company Description', null, null, 0, null, 0, 'N']
             ];
-
             $stmt = $pdo->prepare($sql);
             foreach ($metaDetailsValues as $row) {
                 $stmt->execute($row);

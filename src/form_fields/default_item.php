@@ -194,7 +194,8 @@ function getFormFields($request) {
             "type" => "hidden",
             "lbl" => "Edit ID",
             "nm" => "item_id",
-            "val" => $item_id
+            "val" => $item_id,
+            "cls" => "form-control formfields"
         ];
 
         if ($item_id == 0) {

@@ -1,11 +1,22 @@
 <?php
 session_start();
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$host = $_SERVER['HTTP_HOST'];
-$baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+ini_set("display_errors",1);
+
+$host = 'localhost';
+$dbname = 'u797036281_demo';
+$username = 'u797036281_demo';
+$password = 'Online@112018';
+
+$isLocal = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1', '::1']) || getenv('APP_ENV') === 'local';
+if($isLocal){
+    $host = 'localhost';
+    $dbname = 'Demonstration';
+    $username = 'developer';
+    $password = 'Online@112018';
+}
+
+$charset = 'utf8mb4';
 $secret_key = "asdffffs@122334";
-$records_per_page = 10;
-$allow_delete_record = "N";
 
 $email_host = "smtp.hostinger.com";
 $email_port = 465;
@@ -16,16 +27,14 @@ $email_password = "Cloud@112018";
 $smtp_secure = "ssl";
 $smtp_auth = true;
 
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+$baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+$records_per_page = 10;
+$allow_delete_record = "N";
+
 $site_url = $protocol . $host . $baseDir . '/';
 $site_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
-
-ini_set("display_errors",1);
-
-$host = 'localhost';
-$dbname = 'Demonstration';
-$username = 'developer';
-$password = 'Online@112018';
-$charset = 'utf8mb4';
 
 // db (Data Source Name)
 $db = "mysql:host=$host;dbname=$dbname;charset=$charset";
@@ -206,4 +215,50 @@ function fnInvalidToken(){
     return $arr;
 }
 
+function logQuery($sql, $params, $logDir = null) {
+    global $site_path;
+    if ($logDir === null) {
+        $logDir = $site_path . 'src/logs/';
+    }
+    if (!is_dir($logDir)) {
+        if (!mkdir($logDir, 0755, true)) {
+            error_log("Failed to create log directory: " . $logDir);
+            return false;
+        }
+    }
+    $filename = 'query_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . '.log';
+    $filePath = $logDir . $filename;
+    $parts = explode('?', $sql);
+    $output = '';
+    foreach ($parts as $i => $part) {
+        $output .= $part;
+        if (isset($params[$i])) {
+            $val = $params[$i];
+            if ($val === null) {
+                $output .= 'NULL';
+            } elseif (is_int($val) || is_float($val)) {
+                $output .= $val;
+            } elseif (is_bool($val)) {
+                $output .= ($val ? '1' : '0');
+            } else {
+                $output .= "'" . addslashes((string)$val) . "'";
+            }
+        }
+    }
+    $logLine = date('[Y-m-d H:i:s]') . " " . $output . PHP_EOL;
+    if (file_put_contents($filePath, $logLine, LOCK_EX) === false) {
+        error_log("Failed to write log file: " . $filePath);
+        return false;
+    }
+    chmod($filePath, 0644);
+    return $filePath;
+}
+function createAlias($title, $separator = '-') {
+    $alias = mb_strtolower($title, 'UTF-8');
+    $alias = preg_replace('/[^\p{L}\p{N}\s]/u', '', $alias);
+    $alias = preg_replace('/\s+/', $separator, $alias);
+    $alias = trim($alias, $separator);
+    $alias = preg_replace('/' . preg_quote($separator, '/') . '{2,}/', $separator, $alias);
+    return $alias ?: 'alias';
+}
 ?>

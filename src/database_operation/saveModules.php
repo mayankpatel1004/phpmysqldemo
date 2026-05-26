@@ -1,21 +1,8 @@
 <?php
-function getRealQuery($sql, $params)
-{
-    foreach ($params as $value) {
 
-        if (is_string($value)) {
-            $value = "'" . addslashes($value) . "'";
-        } elseif ($value === null) {
-            $value = "NULL";
-        }
-
-        $sql = preg_replace('/\?/', $value, $sql, 1);
-    }
-
-    return $sql;
-}
 function saveItemSection($data,$files) {
     global $pdo,$site_path;
+    $now = date('Y-m-d H:i:s');
     $keys = [];
     $values = [];
 
@@ -40,8 +27,6 @@ function saveItemSection($data,$files) {
         }
     }
 
-    
-
     if (!empty($data['item_section_id']) && (int)$data['item_section_id'] > 0) {
         $setParts = [];
         foreach ($keys as $k) {
@@ -50,8 +35,9 @@ function saveItemSection($data,$files) {
 
         $sql = "UPDATE item_section SET " . implode(", ", $setParts) . " WHERE item_section_id = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([...$values, $data['item_section_id']]);
-        //echo getRealQuery($sql, [...$values, $data['item_section_id']]);
+        $arrValues = [...$values, $data['item_section_id']];
+        $stmt->execute($arrValues);
+        logQuery($sql, $arrValues);
         $arr = array(
             "success" => 1,
             "message" => "Success",
@@ -65,12 +51,11 @@ function saveItemSection($data,$files) {
             $sql = "INSERT INTO item_section (" . implode(", ", $keys) . ") VALUES ($placeholders)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($values);
+            logQuery($sql, $values);
             $insertedId = $pdo->lastInsertId();
-            //echo getRealQuery($sql, $values);
 
             if ($insertedId > 0) {
-                //$section_alias = functions::getTitleAlias($data['section_title']);
-                $section_alias = $data['section_title'];
+                $section_alias = createAlias($data['section_title']);
 
                 $checkSql = "SELECT section_alias FROM item_section WHERE section_alias = ?";
                 $stmt = $pdo->prepare($checkSql);
@@ -81,9 +66,11 @@ function saveItemSection($data,$files) {
                     $section_alias .= "-" . time();
                 }
 
-                $updateSql = "UPDATE item_section SET section_alias = ? WHERE item_section_id = ?";
+                $updateSql = "UPDATE item_section SET section_alias = ?,created_at = ? WHERE item_section_id = ?";
                 $stmt = $pdo->prepare($updateSql);
-                $stmt->execute([$section_alias, $insertedId]);
+                $arrValues = [$section_alias,$now, $insertedId];
+                logQuery($updateSql, $arrValues);
+                $stmt->execute($arrValues);
 
                 $pdo->commit();
 
@@ -100,7 +87,6 @@ function saveItemSection($data,$files) {
                 throw new Exception("Insert failed, no ID returned.");
             }
         } catch (Exception $e) {
-            // Rollback if something failed
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
@@ -117,6 +103,7 @@ function saveItemSection($data,$files) {
 
 function saveItemForm($data, $files = [], $headers = []) {
     global $pdo,$site_path;
+    $now = date('Y-m-d H:i:s');
 
     try {
         $pdo->beginTransaction();
@@ -164,33 +151,36 @@ function saveItemForm($data, $files = [], $headers = []) {
 
             $sql = "UPDATE items SET " . implode(", ", $setParts) . " WHERE item_id = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([...$values, $itemId]);
+            $arrValues1 = [...$values, $itemId];
+            $stmt->execute($arrValues1);
+            logQuery($sql, $arrValues1);
 
-            if (!empty($data['item_id'])) {
-    
+            if (!empty($data['item_sections_id'])) {
                 $deleteSql = "DELETE FROM item_section_relation WHERE item_id = ?";
                 $stmt = $pdo->prepare($deleteSql);
                 $stmt->execute([$itemId]);
 
-                $sections = array_filter(array_map('intval', explode(",", $data['item_id'])));
+                $sections = array_filter(array_map('intval', explode(",", $data['item_sections_id'])));
 
                 foreach ($sections as $sectionId) {
-                    $insertSql = "INSERT INTO item_section_relation (item_id, section_id) VALUES (?, ?)";
+                    $insertSql = "INSERT INTO item_section_relation (item_id, section_id, created_at) VALUES (?, ?, ? )";
                     $stmt = $pdo->prepare($insertSql);
-                    $stmt->execute([$itemId, $sectionId]);
+                    $arrValues2 = [$itemId, $sectionId, $now];
+                    $stmt->execute($arrValues2);
+                    logQuery($insertSql, $arrValues2);
                 }
             }
-
         } else {
 
             $placeholders = implode(", ", array_fill(0, count($keys), "?"));
             $sql = "INSERT INTO items (" . implode(", ", $keys) . ") VALUES ($placeholders)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($values);
+            logQuery($sql, $values);
             $itemId = $pdo->lastInsertId();
 
             if ($itemId > 0) {
-                $item_alias = $data['item_title'];
+                $item_alias = createAlias($data['item_title']);
                 $checkSql = "SELECT item_alias FROM items WHERE item_alias = ?";
                 $stmt = $pdo->prepare($checkSql);
                 $stmt->execute([$item_alias]);
@@ -200,21 +190,25 @@ function saveItemForm($data, $files = [], $headers = []) {
                     $item_alias .= "-" . time();
                 }
 
-                $updateSql = "UPDATE items SET item_alias = ? WHERE item_id = ?";
+                $updateSql = "UPDATE items SET item_alias = ?,created_at = ? WHERE item_id = ?";
                 $stmt = $pdo->prepare($updateSql);
-                $stmt->execute([$item_alias, $itemId]);
+                $arrValues = [$item_alias,$now, $itemId];
+                $stmt->execute($arrValues);
+                logQuery($updateSql, $arrValues);
 
-                if (!empty($data['item_id'])) {
-                    $sections = array_filter(array_map('intval', explode(",", $data['item_id'])));
+                if (!empty($data['item_sections_id'])) {
+                    $sections = array_filter(array_map('intval', explode(",", $data['item_sections_id'])));
 
                     $deleteSql = "DELETE FROM item_section_relation WHERE item_id = ?";
                     $stmt = $pdo->prepare($deleteSql);
                     $stmt->execute([$itemId]);
 
                     foreach ($sections as $sectionId) {
-                        $insertSql = "INSERT INTO item_section_relation (item_id, section_id) VALUES (?, ?)";
+                        $insertSql = "INSERT INTO item_section_relation (item_id, section_id,created_at) VALUES (?, ?, ?)";
                         $stmt = $pdo->prepare($insertSql);
-                        $stmt->execute([$itemId, $sectionId]);
+                        $arrValues2 = [$itemId, $sectionId, $now];
+                        $stmt->execute($arrValues2);
+                        logQuery($insertSql, $arrValues2);
                     }
                 }
                 
