@@ -76,6 +76,7 @@ function sendMail($to, $subject, $body, $altBody = '')
         ];
     }
 }
+
 function getMetaDetails(){
     global $site_url,$pdo;
     $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
@@ -105,5 +106,92 @@ function getMetaDetails(){
         "metaDescription" => $metaDescription,
         "pageTitle" => $pageTitle
     ];
+}
+
+function emailHeader($title = 'Notification')
+{
+    global $site_url,$pdo;
+    $website_name = "";
+    $sqlQuery = "SELECT config_value FROM `site_config` WHERE `config_name` IN ('FRONT_APPLICATION_TITLE')";
+    $arrConfigDetails = sqlSelect($sqlQuery, PDO::FETCH_ASSOC);
+    if (!empty($arrConfigDetails)) {
+        $website_name = $arrConfigDetails[0]['config_value'];
+    }
+
+    return '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>'.$title.'</title>
+    </head>
+    <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
+        <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#f4f4f4">
+            <tr>
+                <td align="center">
+                    <table width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="margin-top:20px;">
+                        
+                        <!-- Header -->
+                        <tr>
+                            <td align="center" bgcolor="#007bff" style="padding:20px;">
+                                ' . $website_name . '
+                            </td>
+                        </tr>
+
+                        <!-- Content -->
+                        <tr>
+                            <td style="padding:30px;">
+    ';
+}
+
+function emailFooter()
+{
+    global $site_url,$pdo;
+    $website_name = "";
+    $company_address = "";
+    $company_contact = "";
+    $company_email = "";
+    $company_city = "";
+    $company_state = "";
+    $company_country = "";
+    $company_zipcode = "";
+    $sqlQuery = "SELECT config_value FROM `site_config` WHERE `config_name` IN ('FRONT_APPLICATION_TITLE','COMPANY_NAME','COMPANY_ADDRESS1','COMPANY_ADDRESS2','COMPANY_CITY','COMPANY_STATE','COMPANY_COUNTRY','COMPANY_ZIPCODE','COMPANY_CONTACT_NUMBER','COMPANY_EMAIL')";
+    $arrConfigDetails = sqlSelect($sqlQuery, PDO::FETCH_ASSOC);
+    if (!empty($arrConfigDetails)) {
+        $website_name = $arrConfigDetails[0]['config_value'];
+        $company_address = $arrConfigDetails[2]['config_value']." ".$arrConfigDetails[3]['config_value'];
+        $company_city = $arrConfigDetails[4]['config_value'];
+        $company_state = $arrConfigDetails[5]['config_value'];
+        $company_country = $arrConfigDetails[6]['config_value'];
+        $company_zipcode = $arrConfigDetails[7]['config_value'];
+        $company_contact = $arrConfigDetails[8]['config_value'];
+        $company_email = $arrConfigDetails[9]['config_value'];
+    }
+    return '
+                            </td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#f8f9fa"
+                                style="padding:20px;text-align:center;color:#666;font-size:12px;">
+                                
+                                <strong>'.$website_name.'</strong><br>
+                                '.$company_address.'<br>
+                                Email: '.$company_email.'<br>
+                                Phone: '.$company_contact.'<br><br>
+
+                                &copy; '.date('Y').' '.$website_name.' . All Rights Reserved.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>';
+}
+
+function generateEmailConetent($title, $content)
+{
+    return emailHeader($title) . $content . emailFooter();
 }
 ?>

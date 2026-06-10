@@ -421,7 +421,8 @@ function saveUserForm($data,$files){
             $to = $data['user_email'];
             $subject = 'Account Created';
             $body = ($data['user_firstname'] ?? '') . ",<br>Your account has been created successfully.";
-            $emailResponse = sendMail($to,$subject,$body);
+            $final_body = generateEmailConetent("Registration Email", $body);
+            $emailResponse = sendMail($to,$subject,$final_body);
             if (!$emailResponse['success']) {
                 error_log("Email Error: " . $emailResponse['message']);
             }
