@@ -1,9 +1,12 @@
 <?php
-$body = "Dear User<br />,
-We received a request to reset the password for your account.<br />
-To proceed with resetting your password, please use the verification token below:<br />
-**Reset Token:** {RESET_TOKEN}<br />
-This token is valid for **1 day** and can only be used once.<br />
-If you did not request a password reset, please ignore this email. Your account will remain secure, and no changes will be made.<br />
-For security reasons, do not share this token with anyone.<br />
-";
+$current_date = date('Y-m-d H:i:s');
+$body = "Dear User,<br />
+This is a confirmation that the password for your account has been changed successfully.<br />
+* Date & Time: " . $current_date . "<br />
+* Account: {EMAIL_OR_USERNAME}<br />
+If you made this change, no further action is required.<br />
+If you did not change your password, please verify your account and secure your account as soon as possible.<br />
+For your security, we recommend:<br />
+* Using a strong and unique password.<br />
+* Never sharing your login credentials with anyone.<br />
+* Updating your password regularly.<br />";

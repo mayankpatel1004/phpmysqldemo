@@ -68,7 +68,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'forgot-password'){
     If you did not request a password reset, please ignore this email. Your account will remain secure, and no changes will be made.<br />
     For security reasons, do not share this token with anyone.<br />
     ";
-
     $final_body = generateEmailConetent("Forgot Password", $body);
     $arrData = sendMail($to, $subject, $final_body, $altBody = '');
     echo json_encode($arrData);
@@ -846,6 +845,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'changepassword'){
     if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
         $password = md5($_POST['password']);
         $user_id = $_POST['user_id'];
+        $user_email = $_POST['user_email'];
         $sql = "UPDATE users SET `user_password` = :password WHERE user_id = :user_id";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -856,6 +856,23 @@ if(isset($_GET['action']) && $_GET['action'] == 'changepassword'){
             'success' => 1,
             'message' => "Data successfully updated"
         );
+
+        $to = $user_email;
+        $subject = 'Your password changed.';
+        $current_date = date('Y-m-d H:i:s');
+        $body = "Hello $user_email,<br />
+        This is a confirmation that the password for your account has been changed successfully.<br />
+         <b>* Date & Time: " . $current_date . "</b><br />
+         <b>* Account: $user_email</b><br />
+        If you made this change, no further action is required.<br />
+        If you did not change your password, please verify your account and secure your account as soon as possible.<br />
+        For your security, we recommend:<br />
+         <b>* Using a strong and unique password.</b><br />
+         <b>* Never sharing your login credentials with anyone.</b><br />
+         <b>* Updating your password regularly.</b><br />";
+        $final_body = generateEmailConetent("Password Changed", $body);
+        $arrData = sendMail($to, $subject, $final_body, $altBody = '');
+
         echo json_encode($arr);
     } else {
         $arr = fnInvalidToken();

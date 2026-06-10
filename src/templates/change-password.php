@@ -66,6 +66,7 @@
                 url: '<?php echo $site_url;?>routes?action=changepassword&action2=updatepassword',
                 data: {
                     user_id : '<?php echo $_SESSION['user']['user_id'];?>',
+                    user_email : '<?php echo $_SESSION['user']['user_email'];?>',
                     password : $("#password").val(),
                     cpassword: $("#cpassword").val()
                 },
