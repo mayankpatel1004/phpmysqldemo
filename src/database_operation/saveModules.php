@@ -5,9 +5,12 @@ function saveItemSection($data,$files,$tokenDetails) {
     $keys = [];
     $values = [];
 
-    $data['created_by'] = $tokenDetails['data']['user_id'];
-    $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
-    $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+    if($data['item_section_id'] == 0){
+        $data['created_by'] = $tokenDetails['data']['user_id'];
+        $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+        $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+    }
+    
 
     if (isset($files['attachment1']) && $files['attachment1']['error'] == 0) {
         $uploadDir = $site_path."public/uploads/";
@@ -113,9 +116,11 @@ function saveItemForm($data, $files,$tokenDetails) {
         $keys = [];
         $values = [];
 
-        $data['created_by'] = $tokenDetails['data']['user_id'];
-        $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
-        $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+        if($data['item_id'] == 0){
+            $data['created_by'] = $tokenDetails['data']['user_id'];
+            $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+            $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+        }
 
         if (isset($files['attachment1']) && $files['attachment1']['error'] == 0) {
             $uploadDir = $site_path."public/uploads/";
@@ -261,9 +266,11 @@ function saveRoleForm($data,$tokenDetails) {
         $keys = [];
         $values = [];
 
-        $data['created_by'] = $tokenDetails['data']['user_id'];
-        $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
-        $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+        if($data['edit_id'] == 0){
+            $data['created_by'] = $tokenDetails['data']['user_id'];
+            $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+            $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+        }
 
         foreach ($data as $key => $value) {
             if (in_array($key, $excludeKeys)) continue;
@@ -357,7 +364,7 @@ function saveRoleForm($data,$tokenDetails) {
     }
 }
 
-function saveUserForm($data,$files){
+function saveUserForm($data,$files,$tokenDetails){
     global $pdo,$site_path;
     if (isset($files['user_photo']) && $files['user_photo']['error'] == 0) {
         $uploadDir = $site_path."public/uploads/";
@@ -373,6 +380,7 @@ function saveUserForm($data,$files){
         }
     }
     try {
+
         if ((empty($data['edit_id']) || (int)$data['edit_id'] === 0) && defined('USER_EMAIL_UNIQUE') && USER_EMAIL_UNIQUE === "Y") {
             $sqlCheck = "SELECT user_id FROM users WHERE user_email = ? LIMIT 1";
             $stmt = $pdo->prepare($sqlCheck);
@@ -390,6 +398,12 @@ function saveUserForm($data,$files){
 
         $keys = [];
         $values = [];
+        if($data['edit_id'] == 0){
+            $data['created_by'] = $tokenDetails['data']['user_id'];
+            $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+            $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
+        }
+        
         foreach ($data as $key => $value) {
             if ($key === "edit_id") continue;
             $keys[] = $key;
@@ -427,6 +441,7 @@ function saveUserForm($data,$files){
             );
             echo json_encode($arr);
     } else {
+
         $placeholders = implode(", ", array_fill(0, count($keys), "?"));
         $sql = "INSERT INTO users (" . implode(", ", $keys) . ") VALUES ($placeholders)";
         $stmt = $pdo->prepare($sql);

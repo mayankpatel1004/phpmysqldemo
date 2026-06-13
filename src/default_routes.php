@@ -1052,7 +1052,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
         $files = $_FILES;
         unset($data['action']);
         unset($data['item_type']);
-        saveUserForm($data,$files);
+        saveUserForm($data,$files,$arrTokenData);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);
