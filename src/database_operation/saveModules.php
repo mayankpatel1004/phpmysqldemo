@@ -104,7 +104,7 @@ function saveItemSection($data,$files,$tokenDetails) {
 }
 
 
-function saveItemForm($data, $files = [], $headers = []) {
+function saveItemForm($data, $files,$tokenDetails) {
     global $pdo,$site_path;
     $now = date('Y-m-d H:i:s');
 
@@ -112,6 +112,10 @@ function saveItemForm($data, $files = [], $headers = []) {
         $pdo->beginTransaction();
         $keys = [];
         $values = [];
+
+        $data['created_by'] = $tokenDetails['data']['user_id'];
+        $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+        $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
 
         if (isset($files['attachment1']) && $files['attachment1']['error'] == 0) {
             $uploadDir = $site_path."public/uploads/";
@@ -248,7 +252,7 @@ function saveItemForm($data, $files = [], $headers = []) {
 }
 
 
-function saveRoleForm($data) {
+function saveRoleForm($data,$tokenDetails) {
     global $pdo;
     try {
         $roleId = $data['edit_id'] ?? 0;
@@ -256,6 +260,10 @@ function saveRoleForm($data) {
 
         $keys = [];
         $values = [];
+
+        $data['created_by'] = $tokenDetails['data']['user_id'];
+        $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+        $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
 
         foreach ($data as $key => $value) {
             if (in_array($key, $excludeKeys)) continue;
@@ -297,8 +305,8 @@ function saveRoleForm($data) {
             count($data['module_id']) === count($data['view'])
         ) {
 
-            $insertSql = "INSERT INTO role_access (role_id, module_id, grant_view, grant_add, grant_edit, grant_delete, display_status, display_order, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $insertSql = "INSERT INTO role_access (role_id, module_id, grant_view, grant_add, grant_edit, grant_delete, display_status, display_order, created_at,created_by,created_by_name,created_by_role)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($insertSql);
 
             for ($i = 0; $i < count($data['module_id']); $i++) {
@@ -323,7 +331,10 @@ function saveRoleForm($data) {
                     $grantDelete,
                     $displayStatus,
                     $displayOrder,
-                    $createdAt
+                    $createdAt,
+                    $data['created_by'],
+                    $data['created_by_name'],
+                    $data['created_by_role']
                 ]);
             }
         }

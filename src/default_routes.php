@@ -673,6 +673,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
         $success = '';
         $message = '';
         $table_name = "role";
+        $table_name_relation = "role_access";
         $primary_key = "role_id";
         $orderByString = ' ORDER BY '.$primary_key.' DESC ';
         $page_no = 1;
@@ -701,9 +702,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
             $user_name = "";
             $success = 1;
             $message = 'Status Successfully Updated';
-            if(isset($_SESSION['user']['user_id']) && $_SESSION['user']['user_id'] > 0){
-                $user_id = $_SESSION['user']['user_id'];
-                $user_name = $_SESSION['user']['user_firstname']." ".$_SESSION['user']['user_lastname'];
+            if(isset($arrTokenData['data']['user_id']) && $arrTokenData['data']['user_id'] > 0){
+                $user_id = $arrTokenData['data']['user_id'];
+                $user_name = $arrTokenData['data']['user_firstname']." ".$arrTokenData['data']['user_lastname'];
             }
             $status_column_name = "";
             $status_column_value = "";
@@ -737,6 +738,14 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
                 deleted_by_name = '$user_name'
                 WHERE $primary_key IN (".$_POST['ids'].")";
                 sqlUpdate($sqlUpdate);
+
+                $sqlUpdateRelation = "UPDATE $table_name_relation SET 
+                deleted_status = 'Y',
+                deleted_time = NOW(),
+                deleted_by = '$user_id',
+                deleted_by_name = '$user_name'
+                WHERE $primary_key IN (".$_POST['ids'].")";
+                sqlUpdate($sqlUpdateRelation);
                 
             } else if($_POST['status'] == 'D'){
                 $sqlDelete = "DELETE FROM $table_name WHERE $primary_key IN (".$_POST['ids'].")";
@@ -988,7 +997,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
         $data = $_POST;
         $files = $_FILES;
         unset($data['action']);
-        saveItemForm($data,$files);
+        saveItemForm($data,$files,$arrTokenData);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);
@@ -1027,7 +1036,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'role_form'){
         include 'database_operation/saveModules.php';
         $data = $_POST;
         unset($data['action']);
-        saveRoleForm($data);
+        saveRoleForm($data,$arrTokenData);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);
