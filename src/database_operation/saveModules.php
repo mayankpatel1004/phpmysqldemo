@@ -5,7 +5,8 @@ function saveItemSection($data,$files,$tokenDetails) {
     $keys = [];
     $values = [];
 
-    if($data['item_section_id'] == 0){
+    
+    if (empty($data['edit_id'])) {
         $data['created_by'] = $tokenDetails['data']['user_id'];
         $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
         $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
@@ -116,7 +117,7 @@ function saveItemForm($data, $files,$tokenDetails) {
         $keys = [];
         $values = [];
 
-        if($data['item_id'] == 0){
+        if (empty($data['edit_id'])) {
             $data['created_by'] = $tokenDetails['data']['user_id'];
             $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
             $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
@@ -266,7 +267,7 @@ function saveRoleForm($data,$tokenDetails) {
         $keys = [];
         $values = [];
 
-        if($data['edit_id'] == 0){
+        if (empty($data['edit_id'])) {
             $data['created_by'] = $tokenDetails['data']['user_id'];
             $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
             $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
@@ -300,6 +301,7 @@ function saveRoleForm($data,$tokenDetails) {
             $sql = "INSERT INTO role (" . implode(", ", $keys) . ") VALUES ($placeholders)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($values);
+            logQuery($sql, $values);
             $roleId = $pdo->lastInsertId();
         }
         //echo "Role ID: " . $roleId; // Debugging line to check role ID
@@ -398,7 +400,7 @@ function saveUserForm($data,$files,$tokenDetails){
 
         $keys = [];
         $values = [];
-        if($data['edit_id'] == 0){
+        if (empty($data['edit_id'])) {
             $data['created_by'] = $tokenDetails['data']['user_id'];
             $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
             $data['created_by_role'] = $tokenDetails['data']['user_role_id'];

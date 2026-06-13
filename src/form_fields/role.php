@@ -82,15 +82,6 @@ function getFormFields($request) {
             "cls" => "form-control js-example-basic-single formfields"
         ];
 
-        $arrFields[] = [
-            "type" => "text",
-            "lbl" => "Created By",
-            "nm" => "created_by",
-            "val" => $edit_created_by,
-            "req" => "N",
-            "cls" => "form-control formfields"
-        ];
-
         // Meta Modules
         $metaRecords = getRoleMetaDetails();
 
