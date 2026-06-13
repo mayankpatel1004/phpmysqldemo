@@ -4,7 +4,6 @@ use PHPMailer\PHPMailer\Exception;
 require 'src/vendor/autoload.php';
 $mail = new PHPMailer(true);
 
-
 if(isset($_GET['action']) && $_GET['action'] == 'login'){
     $user_name = $_POST['user_name'];
     $password = $_POST['password'];
@@ -388,13 +387,13 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemssectionfilter'){
         $success = '';
         $message = '';
         $table_name = "item_section";
+        $table_name_relation = "item_section_relation";
         $primary_key = "item_section_id";
         $orderByString = ' ORDER BY '.$primary_key.' DESC ';
         $page_no = 1;
         if(isset($_POST['sort_by']) && $_POST['sort_by'] != ""){
             $sort_by = explode("__",$_POST['sort_by']);
             $orderByString = " ORDER BY ".$sort_by[0]." ".$sort_by[1];
-            
         }
         if(isset($_POST['page_no']) && $_POST['page_no'] > 0){
             $page_no = $_POST['page_no'];
@@ -430,8 +429,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemssectionfilter'){
                 display_status = 'N'
                 WHERE $primary_key IN (".$_POST['ids'].")";
                 sqlUpdate($sqlUpdate);
-
-
+                
             } else if($_POST['status'] == 'A'){
                 $status_column_name = "display_status";
                 $status_column_name = "Y";
@@ -453,12 +451,12 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemssectionfilter'){
                 WHERE $primary_key IN (".$_POST['ids'].")";
                 sqlUpdate($sqlUpdate);
 
-                $sqlUpdateRelation = "UPDATE item_section_relation SET 
+                $sqlUpdateRelation = "UPDATE $table_name_relation SET 
                 deleted_status = 'Y',
                 deleted_time = NOW(),
                 deleted_by = '$user_id',
                 deleted_by_name = '$user_name' 
-                WHERE $primary_key IN (".$_POST['ids'].")";
+                WHERE section_id IN (".$_POST['ids'].")";
                 sqlUpdate($sqlUpdateRelation);
                 
             } else if($_POST['status'] == 'D'){
@@ -466,7 +464,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemssectionfilter'){
                 $sqlDelete = "DELETE FROM $table_name WHERE $primary_key IN (".$_POST['ids'].")";
                 sqlDelete($sqlDelete);
 
-                $sqlDeleteRelation = "DELETE FROM item_section_relation WHERE $primary_key IN (".$_POST['ids'].")";
+                $sqlDeleteRelation = "DELETE FROM $table_name_relation WHERE section_id IN (".$_POST['ids'].")";
                 sqlDelete($sqlDeleteRelation);
             }
 
@@ -942,7 +940,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'item_section_form'){
 }
 
 if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
-
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
     if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
@@ -950,7 +947,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
         $data = $_POST;
         $files = $_FILES;
         unset($data['action']);
-        saveItemSection($data,$files);
+        saveItemSection($data,$files,$arrTokenData);
     } else {
         $arr = fnInvalidToken();
         echo json_encode($arr);

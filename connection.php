@@ -13,6 +13,8 @@ if($isLocal){
     $dbname = 'Demonstration';
     $username = 'developer';
     $password = 'Online@112018';
+    $default_login_pwd1 = "asd@12345";
+    $default_login_pwd2 = "developer";
     ini_set("display_errors",1);
     error_reporting(E_ALL);
     ini_set('log_errors', '1'); 

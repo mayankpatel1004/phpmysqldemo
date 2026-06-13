@@ -1,9 +1,13 @@
 <?php
-function saveItemSection($data,$files) {
+function saveItemSection($data,$files,$tokenDetails) {
     global $pdo,$site_path;
     $now = date('Y-m-d H:i:s');
     $keys = [];
     $values = [];
+
+    $data['created_by'] = $tokenDetails['data']['user_id'];
+    $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
+    $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
 
     if (isset($files['attachment1']) && $files['attachment1']['error'] == 0) {
         $uploadDir = $site_path."public/uploads/";
