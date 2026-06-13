@@ -2,15 +2,11 @@ git add . && git commit -m "Updates" && git push origin main
 ssh -p 65002 u797036281@82.112.239.225
 cd /home/u797036281/domains/lightyellow-tarsier-923320.hostingersite.com/public_html && git pull origin main
 
-
 /opt/lampp/bin/php /opt/lampp/htdocs/phpmysqldemo/src/migrations/migrations.php
 /opt/lampp/bin/php /opt/lampp/htdocs/phpmysqldemo/src/migrations/seeders.php
 
 /opt/alt/php81/usr/bin/php /home/u797036281/domains/lightyellow-tarsier-923320.hostingersite.com/public_html/src/migrations/migrations.php
 /opt/alt/php81/usr/bin/php /home/u797036281/domains/lightyellow-tarsier-923320.hostingersite.com/public_html/src/migrations/seeders.php
-
-http://localhost/phpmysqldemo/
-
 
 To Do : 
 ==============
@@ -18,28 +14,3 @@ To Do :
 - Forgot password functionality.
 - Site configuration.
 - To test everything in postman.
-
-
-
-F1HzicfUFOxD9UM+wKDOPVBERUJOOUl5dTJrOHF4YUpPRFZpK1ZJSjdsUm5oWTF5S0VTR1l5OEpCWHR0Nk1BVDJTellYQVU3SFZnKzdIbDBKU0dvc1lwdGQzNFJHbS9pYTJ4OGRoYzMvbU1GUHhIQVJWK2I1UkRpYWNsdzJVSkU1dDBMWDlDOURzcVZ2NnJ0WGpsQzlITnZQS2xaQXZQbHU2MlVkU1ZqdzREZlh0Z1ZmWWlWQlZzaWhaeGg2VmU2QXJlbVo5bnVqTEhkeHpORzl0VWcrcUVRbjBBR1JpWVFMYzRQK2N5NSsycnJYVHlVU0t3QjBTUi9EUmVMWVN3S0xZTmthM081Y01uWHBqWHBnMXdUOXZuQXA3Rkx6V2JIWjZXbjkwVCs3bXYwKzM1TnJhNDRicHVtMTZKaExPaVF6NU1MMFUwRWZndWR5a0lXVXZnZTdCeWdwcWxYaXlrb01obEJuVk4rQkc4VnoycStkaHpzb0paVzdybjNtUzV4TGFnVE01OWZCbE5NdkN6Wg==
-
-
-
-Pending : 
-==================
-User photo upload functionality pending.
-item image upoad pending.
-item section image upload pending.
-
-
-
-http://localhost/phpmysqldemo/routes?action=forgot-password
-
-user_email
-developer112018@yopmail.com
-
-
-
-http://localhost/phpmysqldemo/password-token?user_email=developer112018@yopmail.com
-user_email
-developer112018@yopmail.com

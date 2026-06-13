@@ -7,7 +7,7 @@ if (file_exists($site_path.'src/functions/common_functions.php')) {
     echo "File not found!";exit;
 }
 if(isset($_GET['pg']) && $_GET['pg'] == "routes"){
-    include 'src/routes.php';
+    include 'src/default_routes.php';
 } else if(isset($_GET['pg']) && $_GET['pg'] != ""){
     include 'src/templates/'.$_GET['pg'].".php";
 } else {
