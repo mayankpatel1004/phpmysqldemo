@@ -1,6 +1,6 @@
 Git Push To Live Server : 
 ==================================================
-sudo rm -rf /opt/lampp/htdocs/phpmysqldemo/src/logs/* && git add . && git commit -m "Updates" && git push origin main
+rm -rf /opt/lampp/htdocs/phpmysqldemo/src/logs/* && git add . && git commit -m "Updates" && git push origin main
 ssh -p 65002 u797036281@82.112.239.225
 cd /home/u797036281/domains/lightyellow-tarsier-923320.hostingersite.com/public_html && git pull origin main
 

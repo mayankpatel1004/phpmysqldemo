@@ -952,7 +952,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_section_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
     if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
-        include 'database_operation/saveModules.php';
+        include 'database_operation/save_default_modules.php';
         $data = $_POST;
         $files = $_FILES;
         unset($data['action']);
@@ -993,7 +993,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'item_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
     if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
-        include 'database_operation/saveModules.php';
+        include 'database_operation/save_default_modules.php';
         $data = $_POST;
         $files = $_FILES;
         unset($data['action']);
@@ -1033,7 +1033,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'role_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
     if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
-        include 'database_operation/saveModules.php';
+        include 'database_operation/save_default_modules.php';
         $data = $_POST;
         unset($data['action']);
         saveRoleForm($data,$arrTokenData);
@@ -1047,7 +1047,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'user_form'){
     $strHeaders = get_request_headers();
     $arrTokenData = decodeToken($strHeaders,$secret_key);
     if($strHeaders && (isset($arrTokenData) && $arrTokenData['status'] == 1)){
-        include 'database_operation/saveModules.php';
+        include 'database_operation/save_default_modules.php';
         $data = $_POST;
         $files = $_FILES;
         unset($data['action']);
