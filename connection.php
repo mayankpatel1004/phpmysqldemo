@@ -105,6 +105,7 @@ function sqlUpdate($sql) {
         global $pdo;
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
+        return true;
     } catch (PDOException $e) {
         echo "❌ Update error: " . $e->getMessage() . "\n".$sql;
         return false;

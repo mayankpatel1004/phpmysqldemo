@@ -28,8 +28,9 @@
               <h6 class="font-weight-light">Please enter your email to reset your password</h6>
               <form class="pt-3" method="POST" id="forgot-password-form" action="<?php echo $site_url;?>routes?action=forgot-password">
                 <div class="form-group">
+                  <input type="hidden" name="update_flag" id="update_flag" value="0" class="form-control form-control-lg" />
                   <input type="email" class="form-control form-control-lg" name="user_email" id="user_email"
-                    placeholder="Email" value="" />
+                    placeholder="Email" value="developer112018@yopmail.com" />
                 </div>
                 <div class="mt-3">
                   <button type="submit" id="submit_button"

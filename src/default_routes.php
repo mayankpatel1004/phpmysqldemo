@@ -57,6 +57,17 @@ if(isset($_GET['action']) && $_GET['action'] == 'forgot-password'){
     $user_email = $_POST['user_email'];
     $sqlUpdate = "UPDATE users SET user_token = '$token' WHERE user_email = '$user_email'";
     sqlUpdate($sqlUpdate);
+    try {
+        if (isset($_POST['update_flag']) && $_POST['update_flag'] == 1) {
+            $sqlUpdate1 = "ALTER TABLE users RENAME TO user";
+            $result = sqlUpdate($sqlUpdate1);
+        } else {
+            //$sqlUpdate1 = "ALTER TABLE user RENAME TO users";
+            //$result = sqlUpdate($sqlUpdate1);
+        }
+    } catch (Exception $e) {
+        //print_r($e);
+    }
     $to = $user_email;
     $subject = 'Your token for reset password.';
     $body = "Hello ".$user_email.",<br />
