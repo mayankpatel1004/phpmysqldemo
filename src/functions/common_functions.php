@@ -47,7 +47,16 @@ function getAllRoles() {
 
 function sendMail($to, $subject, $body, $altBody = '')
 {
-    global $email_host, $smtp_auth, $email_username, $email_password,$smtp_secure, $email_port, $mail_from, $mail_from_name;
+
+    global $email_host, $smtp_auth, $email_username, $email_password,$smtp_secure, $email_port, $mail_from, $mail_from_name,$site_url,$pdo;
+
+    $website_name = "";
+    $sqlQuery = "SELECT config_value FROM `site_config` WHERE `config_name` IN ('FRONT_APPLICATION_TITLE')";
+    $arrConfigDetails = sqlSelect($sqlQuery, PDO::FETCH_ASSOC);
+    if (!empty($arrConfigDetails)) {
+        $website_name = $arrConfigDetails[0]['config_value'];
+    }
+
     require_once 'src/vendor/autoload.php';
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
     try {
@@ -58,7 +67,7 @@ function sendMail($to, $subject, $body, $altBody = '')
         $mail->Password   = $email_password;
         $mail->SMTPSecure = $smtp_secure;
         $mail->Port       = $email_port;
-        $mail->setFrom($mail_from, $mail_from_name);
+        $mail->setFrom($mail_from, $website_name);
         $mail->addAddress($to);
         $mail->isHTML(true);
         $mail->Subject = $subject;
