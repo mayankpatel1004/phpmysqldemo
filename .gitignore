@@ -1,6 +1,7 @@
 node_modules
 .htaccess
 .env
+deploy.sh
 config.txt
 
 # Ignore logs content but keep folder
