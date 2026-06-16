@@ -17,6 +17,10 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $username, $password, $options);
+    echo "✅ Database connected successfully!<br>";
+    echo "Host: $host<br>";
+    echo "Database: $dbname<br>";
+
 } catch (PDOException $e) {
     error_log("PDO Connection Error: " . $e->getMessage());
     die("Database connection failed. Please try again later.");
