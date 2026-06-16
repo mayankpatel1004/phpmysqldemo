@@ -1,4 +1,5 @@
 <?php
+echo 1;exit;
 session_start();
 loadEnv(__DIR__ . '/.env');
 //echo base64_decode($_ENV['APP_ENV']) ?? 'NOT FOUND';exit;
