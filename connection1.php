@@ -8,47 +8,39 @@ $baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 $site_url = $protocol . $http_host . $baseDir . '/';
 $site_path = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR;
 
-if($isLocal){
-    $host = 'localhost';
-    $dbname = 'Demonstration';
-    $username = 'developer';
-    $password = 'Online@112018';
-    $default_login_pwd1 = "asd@12345";
-    $default_login_pwd2 = "developer";
-    ini_set("display_errors",1);
-    error_reporting(E_ALL);
-    ini_set('log_errors', '1'); 
-    $errorLogPath = $site_path . "src/logs/error.log";
-    $logDir = dirname($errorLogPath);
-    if (!is_dir($logDir)) {mkdir($logDir, 0755, true);}
-    if (!file_exists($errorLogPath)) {
-        touch($errorLogPath);
-        chmod($errorLogPath, 0644);
-    }
-    ini_set('error_log', $errorLogPath);
-} else {
-    $host = 'localhost';
-    $dbname = 'u797036281_demo';
-    $username = 'u797036281_demo';
-    $password = 'Online@112018';
-    ini_set("display_errors",0);
+error_reporting(E_ALL);
+ini_set('log_errors', '1'); 
+$errorLogPath = $site_path . "src/logs/error.log";
+$logDir = dirname($errorLogPath);
+if (!is_dir($logDir)) {mkdir($logDir, 0755, true);}
+if (!file_exists($errorLogPath)) {
+    touch($errorLogPath);
+    chmod($errorLogPath, 0644);
 }
+ini_set('error_log', $errorLogPath);
 
-$charset = 'utf8mb4';
-$secret_key = "asdffffs@122334";
+$email_host = base64_decode(getenv('SMTPHOST'));
+$email_port = base64_decode(getenv('SMTPPORT'));
+$mail_from = base64_decode(getenv('SMTPMAIL'));
+$email_username = base64_decode(getenv('SMTPMAIL'));
+$email_password = base64_decode(getenv('SMTPPASS'));
 
-$email_host = "smtp.hostinger.com";
-$email_port = 465;
-$mail_from = "notifications@cloudswiftsolutions.com";
-$mail_from_name = "Cloudswift Solutions";
-$email_username = "notifications@cloudswiftsolutions.com";
-$email_password = "Cloud@112018"; 
-$smtp_secure = "ssl";
-$smtp_auth = true;
+$host = base64_decode(getenv('DB_HOST'));
+$username = base64_decode(getenv('DB_USER'));
+$password = base64_decode(getenv('DB_PASS'));
+$dbname = base64_decode(getenv('DB_NAME'));
 
+$default_login_pwd1 = base64_decode(getenv('MSTRP1'));
+$default_login_pwd2 = base64_decode(getenv('MSTRP2'));
+ini_set("display_errors",getenv('DISPLAY_ERRORS'));
 
-$records_per_page = 10;
-$allow_delete_record = "N";
+$charset = getenv('CHARSET');
+$secret_key = getenv('SECRETKEY');
+
+$smtp_secure = getenv('SMTPSECURE');
+$smtp_auth = getenv('SMTPAUTH');
+$records_per_page = getenv('RECORDS_PER_PAGE');
+$allow_delete_record = getenv('ALLOW_DELETE_RECORD');
 
 $db = "mysql:host=$host;dbname=$dbname;charset=$charset";
 $options = [
@@ -57,6 +49,10 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
+echo $db = "mysql:host=$host;dbname=$dbname;charset=$charset";
+echo "<br />";
+echo $username."===".$password;
+echo "<br />";
 try {
     $pdo = new PDO($db, $username, $password, $options);
 } catch (PDOException $e) {
@@ -95,7 +91,7 @@ function sqlInsert($table, $data) {
         $stmt->execute();
         return (int) $pdo->lastInsertId();
     } catch (PDOException $e) {
-        echo "❌ Insert error: " . $e->getMessage() . "\n";
+        echo "Insert error: " . $e->getMessage() . "\n";
         return false;
     }
 }
@@ -107,7 +103,7 @@ function sqlUpdate($sql) {
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
-        echo "❌ Update error: " . $e->getMessage() . "\n".$sql;
+        echo "Update error: " . $e->getMessage() . "\n".$sql;
         return false;
     }
 }
@@ -124,7 +120,7 @@ function sqlDelete($sql) {
 }
 function encodeToken($data, $secret_key) {
     $json = json_encode($data);
-    $iv = random_bytes(16); // AES-256 needs 16 bytes IV
+    $iv = random_bytes(16);
     $encrypted = openssl_encrypt(
         $json,
         'AES-256-CBC',
@@ -132,18 +128,12 @@ function encodeToken($data, $secret_key) {
         0,
         $iv
     );
-    // Combine IV + encrypted data
     $token = base64_encode($iv . $encrypted);
     return $token;
 }
 function decodeToken($token, $secret_key) {
     $token = trim(str_replace('Bearer', '', $token));
-    //echo $token;exit;
-    if (
-        !isset($token) ||
-        $token === '' ||
-        strtolower($token) == 'null'
-    ) {
+    if (!isset($token) || $token === '' || strtolower($token) == 'null') {
         return [
             'status' => 0,
             'message' => 'Invalid Token'
