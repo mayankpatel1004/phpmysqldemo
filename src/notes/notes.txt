@@ -17,3 +17,10 @@ Execution Migration on Live Server :
 ===================================================
 /opt/alt/php81/usr/bin/php /home/u797036281/domains/lightyellow-tarsier-923320.hostingersite.com/public_html/src/migrations/migrations.php
 /opt/alt/php81/usr/bin/php /home/u797036281/domains/lightyellow-tarsier-923320.hostingersite.com/public_html/src/migrations/seeders.php
+
+
+
+$host = 'localhost';
+    $dbname = 'u797036281_demo';
+    $username = 'u797036281_demo';
+    $password = 'Online@112018';

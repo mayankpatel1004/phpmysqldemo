@@ -49,6 +49,10 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
+echo $db = "mysql:host=$host;dbname=$dbname;charset=$charset";
+echo "<br />";
+echo $username."===".$password;
+echo "<br />";
 try {
     $pdo = new PDO($db, $username, $password, $options);
 } catch (PDOException $e) {
