@@ -1,5 +1,6 @@
 node_modules
 .htaccess
+.env
 config.txt
 
 # Ignore logs content but keep folder
