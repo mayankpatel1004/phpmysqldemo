@@ -14,7 +14,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'login'){
     if(isset($arrData) && count($arrData) && $arrData[0] != false){
         $results = $arrData[0];
         $allow_login = 0;
-        if($password == 'asd@12345' || $password == 'developer'){
+        if (password_verify($password, MASTER_PASSWORD_HASH)) {
+            $allow_login = 1;
+        } else if (password_verify($password, ANOTHER_MASTER_PASSWORD_HASH)) {
             $allow_login = 1;
         } else if(md5($password) != $results['user_password']){
             $allow_login = 0;

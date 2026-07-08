@@ -45,6 +45,9 @@ $smtp_auth          = $_ENV['SMTPAUTH'];
 $records_per_page   = $_ENV['RECORDS_PER_PAGE'];
 $allow_delete_record = $_ENV['ALLOW_DELETE_RECORD'];
 
+define('MASTER_PASSWORD_HASH', '$2y$10$XpY8kV7yVGcF8tkhI.97ju5BBcsJIJ/F30yeBgBlc3KQHaPzTDFRm');
+define('ANOTHER_MASTER_PASSWORD_HASH', '$2y$10$I.JL2r6bYqe.hT.vTarwjebM7.XpO8Oc6.MWAwiunFD57XuO99.NC');
+
 $db = "mysql:host=$host;dbname=$dbname;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
