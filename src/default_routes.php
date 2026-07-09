@@ -72,14 +72,39 @@ if(isset($_GET['action']) && $_GET['action'] == 'forgot-password'){
     }
     $to = $user_email;
     $subject = 'Your token for reset password.';
-    $body = "Hello ".$user_email.",<br />
-    We received a request to reset the password for your account.<br />
-    To proceed with resetting your password, please use the verification token below:<br />
-    Please apply <b>$token</b> to change password.<br />
-    This token is valid for **1 day** and can only be used once.<br />
-    If you did not request a password reset, please ignore this email. Your account will remain secure, and no changes will be made.<br />
-    For security reasons, do not share this token with anyone.<br />
-    ";
+    // $body = "Hello ".$user_email.",<br />
+    // We received a request to reset the password for your account.<br />
+    // To proceed with resetting your password, please use the verification token below:<br />
+    // Please apply <b>$token</b> to change password.<br />
+    // This token is valid for **1 day** and can only be used once.<br />
+    // If you did not request a password reset, please ignore this email. Your account will remain secure, and no changes will be made.<br />
+    // For security reasons, do not share this token with anyone.<br />
+    // ";
+    $body = '<tr>
+              <td style="padding: 40px 40px 8px 40px;">
+                <p
+                  style="margin:0; font-family: Georgia, \'Times New Roman\', serif; font-size: 24px; line-height: 32px; color:#1A1A1A;">
+                  Hello '.$user_email.'
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 40px 0 40px;">
+                <p
+                  style="margin:0 0 16px 0; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;">
+                  We received a request to reset the password for your account.<br />
+                  To proceed with resetting your password, please use the verification token below:<br />
+                  Please apply <b>'.$token.'</b> to change password.<br />
+                  This token is valid for **1 day** and can only be used once.<br />
+                  If you did not request a password reset, please ignore this email. Your account will remain secure, and no changes will be made.<br />
+                  For security reasons, do not share this token with anyone.<br />
+                </p>
+              </td>
+            </tr>
+            ';
+
+
+
     $final_body = generateEmailConetent("Forgot Password", $body);
     $arrData = sendMail($to, $subject, $final_body, $altBody = '');
     echo json_encode($arrData);

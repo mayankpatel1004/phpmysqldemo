@@ -133,31 +133,38 @@ function emailHeader($title = 'Notification')
     if (!empty($arrConfigDetails)) {
         $website_name = $arrConfigDetails[0]['config_value'];
     }
-
-    return '
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>'.$title.'</title>
-    </head>
-    <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
-        <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#f4f4f4">
+    return '<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>'.$title.'</title>
+  </head>
+  <body style="margin:0; padding:0; font-family: Helvetica, Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding: 32px 16px;">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0"
+            style="width:600px; max-width:600px; background-color:#FFFFFF;border:1px solid #ccc; border-radius:4px; overflow:hidden;">
             <tr>
-                <td align="center">
-                    <table width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="margin-top:20px;">
-                        
-                        <!-- Header -->
-                        <tr>
-                            <td align="center" bgcolor="#007bff" style="padding:20px;">
-                                ' . $website_name . '
-                            </td>
-                        </tr>
-
-                        <!-- Content -->
-                        <tr>
-                            <td style="padding:30px;">
-    ';
+              <td style="background-color:#162447; padding: 36px 40px;">
+                <table role="presentation" width="100%" cellpadding="0"
+                  cellspacing="0">
+                  <tr>
+                    <td align="center" valign="middle">
+                      <span
+                        style="font-family: Georgia, \'Times New Roman\', serif; font-size: 22px; color: #FFFFFF; letter-spacing: 0.5px;">
+                        '.$website_name.'
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="background-color:#B8A369; height: 4px; line-height:4px; font-size:0;">&nbsp;</td>
+            </tr>';
 }
 
 function emailFooter()
@@ -184,26 +191,22 @@ function emailFooter()
         $company_email = $arrConfigDetails[9]['config_value'];
     }
     return '
-                            </td>
-                        </tr>
                         <tr>
-                            <td bgcolor="#f8f9fa"
-                                style="padding:20px;text-align:center;color:#666;font-size:12px;">
-                                
+                            <td bgcolor="#162447"
+                                style="padding:20px;text-align:center;color:#FFF;font-size:12px;">
                                 <strong>'.$website_name.'</strong><br>
                                 '.$company_address.'<br>
                                 Email: '.$company_email.'<br>
-                                Phone: '.$company_contact.'<br><br>
-
+                                Phone: '.$company_contact.'<br>
                                 &copy; '.date('Y').' '.$website_name.' . All Rights Reserved.
                             </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </body>
-    </html>';
+                        </tr></table>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>';
 }
 
 function generateEmailConetent($title, $content)
