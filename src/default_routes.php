@@ -140,6 +140,25 @@ if(isset($_GET['action']) && $_GET['action'] == 'reset-password'){
     $sqlUpdatePassword = "UPDATE users SET user_password = '$new_password',user_token = '' WHERE user_id = '$user_id' AND user_email = '$user_email'";
     sqlUpdate($sqlUpdatePassword);
     $data = $_POST;
+
+    try {
+        $to = $user_email;
+        $subject = 'Your password Updated.';
+        $body = "<p style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Hello $user_email,<br /><br />This is a confirmation that the password for your account has been changed successfully.<br /><br />If you did not change your password, please verify your account and secure your account as soon as possible.<br /><br /></p>";
+
+        $html = "";
+        $html .= "<tr>";
+        $html .= "<td style='padding: 10px; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #333333;'>";
+        $html .= $body;
+        $html .= "</td>";
+        $html .= "</tr>";
+
+        $final_body = generateEmailConetent("Password Changed", $html);
+        $arrData = sendMail($to, $subject, $final_body, $altBody = '');
+    } catch (Exception $e) {
+        print_r($e);
+    }
+
     $data['success'] = 1;
     $data['message'] = "Success";
     echo json_encode($data);
@@ -905,17 +924,18 @@ if(isset($_GET['action']) && $_GET['action'] == 'changepassword'){
         $to = $user_email;
         $subject = 'Your password changed.';
         $current_date = date('Y-m-d H:i:s');
-        $body = "Hello $user_email,<br />
+        $body = "<p style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Hello $user_email,<br /><br />
         This is a confirmation that the password for your account has been changed successfully.<br />
-         <b>* Date & Time: " . $current_date . "</b><br />
-         <b>* Account: $user_email</b><br />
-        If you made this change, no further action is required.<br />
-        If you did not change your password, please verify your account and secure your account as soon as possible.<br />
-        For your security, we recommend:<br />
-         <b>* Using a strong and unique password.</b><br />
-         <b>* Never sharing your login credentials with anyone.</b><br />
-         <b>* Updating your password regularly.</b><br />";
-        $final_body = generateEmailConetent("Password Changed", $body);
+         <br />If you did not change your password, please verify your account and secure your account as soon as possible.<br /><br /></p>";
+
+         $html = "";
+         $html .= "<tr>";
+         $html .= "<td style='padding: 10px; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #333333;'>";
+         $html .= $body;
+         $html .= "</td>";
+         $html .= "</tr>";
+
+        $final_body = generateEmailConetent("Password Changed", $html);
         $arrData = sendMail($to, $subject, $final_body, $altBody = '');
 
         echo json_encode($arr);
