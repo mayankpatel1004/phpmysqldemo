@@ -144,7 +144,16 @@ if(isset($_GET['action']) && $_GET['action'] == 'reset-password'){
     try {
         $to = $user_email;
         $subject = 'Your password Updated.';
-        $body = "<p style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Hello $user_email,<br /><br />This is a confirmation that the password for your account has been changed successfully.<br /><br />If you did not change your password, please verify your account and secure your account as soon as possible.<br /><br /></p>";
+        $body = "<p style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Hello $user_email,<br /><br />This is a confirmation that the password for your account has been changed successfully.<br /><br />If you did not change your password, please verify your account and secure your account as soon as possible.<br /><br /></p><p
+            style=\"margin:0 0 16px 0; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">
+            This is a confirmation that the password for your ${CONSTANTS.COMPANY_NAME} account was successfully updated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}.
+            </p>
+            <p
+            style=\"margin:0 0 16px 0; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\"><b>If you performed this action:</b><br />No further action is required. You can continue to access your account as usual.</p>
+            <p
+            style=\"margin:0 0 16px 0; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">
+            <b>If you did not perform this action:</b><br />If you did not request this change, please secure your account immediately or contact our support team.<br /><br />For your security, please ensure you use a strong, unique password for your account.
+            </p>";
 
         $html = "";
         $html .= "<tr>";
@@ -926,7 +935,12 @@ if(isset($_GET['action']) && $_GET['action'] == 'changepassword'){
         $current_date = date('Y-m-d H:i:s');
         $body = "<p style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Hello $user_email,<br /><br />
         This is a confirmation that the password for your account has been changed successfully.<br />
-         <br />If you did not change your password, please verify your account and secure your account as soon as possible.<br /><br /></p>";
+        <br />If you did not change your password, please verify your account and secure your account as soon as possible.<br /><br /></p><p
+            style=\"margin:0 0 16px 0; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">
+            <b>If you performed this action:</b><br />No further action is required. You can continue to access your account as usual.</p><p
+            style=\"margin:0 0 16px 0; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">
+            <b>If you did not perform this action:</b><br />If you did not request this change, please secure your account immediately or contact our support team.<br /><br />For your security, please ensure you use a strong, unique password for your account.</p>";
+         
 
          $html = "";
          $html .= "<tr>";
