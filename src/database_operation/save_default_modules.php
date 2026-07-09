@@ -452,7 +452,22 @@ function saveUserForm($data,$files,$tokenDetails){
         if (!empty($data['user_email'])) {
             $to = $data['user_email'];
             $subject = 'Account Created';
-            $body = ($data['user_firstname'] ?? '') . ",<br>Your account has been created successfully.";
+            
+            $html = "<tr>";
+            $html .= "<td>";
+            $html .= "<p
+                    style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Hello " . ($data['user_firstname'] ?? '') . "! <br /><br />Your account has been created successfully!</p>";
+            $html .= "<p
+                    style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">This email confirms that your account has been successfully created. You can now log in to access our services and explore everything we have to offer.</p>
+                    <p
+                    style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">If you have any questions or need assistance, our support team is always here to help. You can reach us` or by calling us at below contact number.</p>
+                    <p
+                    style=\"margin:5px 10px 5px 10px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 24px; color:#4A4A4A;\">Thank you for choosing us. We look forward to supporting you.<br /><br /></p>";
+            $html .= "</td>";
+            $html .= "</tr>";
+
+            $body = $html;
+
             $final_body = generateEmailConetent("Registration Email", $body);
             $emailResponse = sendMail($to,$subject,$final_body);
             if (!$emailResponse['success']) {
