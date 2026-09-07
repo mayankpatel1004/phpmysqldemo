@@ -35,6 +35,7 @@ $dbname   = base64_decode($_ENV['DB_NAME']);
 $default_login_pwd1 = base64_decode($_ENV['MSTRP1']);
 $default_login_pwd2 = base64_decode($_ENV['MSTRP2']);
 
+
 ini_set("display_errors", $_ENV['DISPLAY_ERRORS']);
 
 $charset   = $_ENV['CHARSET'];

@@ -267,11 +267,13 @@ function saveRoleForm($data,$tokenDetails) {
         $keys = [];
         $values = [];
 
-        if (empty($data['edit_id'])) {
+        //if ($data['edit_id'] == 0) {
             $data['created_by'] = $tokenDetails['data']['user_id'];
             $data['created_by_name'] = $tokenDetails['data']['user_firstname']." ".$tokenDetails['data']['user_lastname'];
-            $data['created_by_role'] = $tokenDetails['data']['user_role_id'];
-        }
+            $data['created_by_role'] = $tokenDetails['data']['user_role_id'];    
+        //}
+        
+        //print_r($tokenDetails);exit;
 
         foreach ($data as $key => $value) {
             if (in_array($key, $excludeKeys)) continue;

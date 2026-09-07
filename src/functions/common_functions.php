@@ -111,12 +111,24 @@ function getMetaDetails(){
         $pageTitle = $arrMetaDetails[0]['page_title'];
     } else {
         if(!isset($_GET['edit_id'])){
-            $sqlInsert = "INSERT INTO `meta_details` (`end_points`, `meta_title`, `meta_description`, `page_title`) VALUES ('$final_string', '$metaTitle', '$metaDescription', '$pageTitle')";
-            $stmt = $pdo->prepare($sqlInsert);
-            $stmt->execute();
-            $itemId = $pdo->lastInsertId();
+
+            $editId = $_GET['edit_id'] ?? null;
+            $itemType = $_GET['item_type'] ?? null;
+            $start_date = $_GET['start_date'] ?? null;
+            $end_date = $_GET['end_date'] ?? null;
+            if (!$editId && !empty($itemType && !empty($start_date) && !empty($end_date))) {
+                $sqlInsert = "INSERT INTO `meta_details` (`end_points`, `meta_title`, `meta_description`, `page_title`) VALUES ('$final_string', '$metaTitle', '$metaDescription', '$pageTitle')";
+                $stmt = $pdo->prepare($sqlInsert);
+                $stmt->execute();
+                $itemId = $pdo->lastInsertId();
+            }
         }
     }
+
+    $delete = "DELETE FROM meta_details WHERE end_points LIKE '%edit_id=%' OR end_points LIKE '%start_date=%' OR end_points LIKE '%end_date=%'";
+    $stmt = $pdo->prepare($delete);
+    $stmt->execute();
+
     return [
         "metaTitle" => $siteTitle,
         "metaDescription" => $metaDescription,
