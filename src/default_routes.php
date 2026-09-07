@@ -420,7 +420,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemsfilter'){
 
         $sqlList = $sqlTotalRecords. $limitString;
         $arrRecords = sqlSelect($sqlList);
-        
+        logQuery($sqlList, []);
         $total_pages = 1;
         if(isset($arrTotalRecords) && $arrTotalRecords > 0) {
             if($arrTotalRecords > $records_per_page) {
@@ -705,7 +705,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'userfilter'){
 
         $sqlList = $sqlTotalRecords. $limitString;
         $arrRecords = sqlSelect($sqlList);
-        
+        logQuery($sqlList, []);
         $total_pages = 1;
         if(isset($arrTotalRecords) && $arrTotalRecords > 0) {
             if($arrTotalRecords > $records_per_page) {
@@ -848,7 +848,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'rolefilter'){
 
         $sqlList = $sqlTotalRecords. $limitString;
         $arrRecords = sqlSelect($sqlList);
-        
+        logQuery($sqlList, []);
         $total_pages = 1;
         if(isset($arrTotalRecords) && $arrTotalRecords > 0) {
             if($arrTotalRecords > $records_per_page) {
