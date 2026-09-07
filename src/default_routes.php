@@ -103,8 +103,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'forgot-password'){
             </tr>
             ';
 
-
-
     $final_body = generateEmailConetent("Forgot Password", $body);
     $arrData = sendMail($to, $subject, $final_body, $altBody = '');
     echo json_encode($arrData);
@@ -569,8 +567,8 @@ if(isset($_GET['action']) && $_GET['action'] == 'itemssectionfilter'){
             AND deleted_status = 'N'
             $orderByString";
         $arrTotalRecords = sqlSelect($sqlTotalRecords);
-
         $sqlList = $sqlTotalRecords. $limitString;
+        logQuery($sqlList, []);
         $arrRecords = sqlSelect($sqlList);
         
         $total_pages = 1;
