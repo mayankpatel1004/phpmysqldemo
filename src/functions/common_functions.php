@@ -132,6 +132,15 @@ function getMetaDetails(){
     $stmt = $pdo->prepare($delete);
     $stmt->execute();
 
+
+    $deletenull = "DELETE FROM meta_details WHERE end_points LIKE '%item_type=%' AND (
+            end_points LIKE '%item_type=&%'
+            OR end_points LIKE '%item_type=%' AND end_points NOT LIKE '%item_type=%_%'
+            OR end_points LIKE '%item_type=none%'
+            OR end_points LIKE '%item_type=NULL%')";
+    $stmt = $pdo->prepare($deletenull);
+    $stmt->execute();
+
     return [
         "metaTitle" => $siteTitle,
         "metaDescription" => $metaDescription,
