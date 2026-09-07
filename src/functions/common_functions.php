@@ -116,7 +116,10 @@ function getMetaDetails(){
             $itemType = $_GET['item_type'] ?? null;
             $start_date = $_GET['start_date'] ?? null;
             $end_date = $_GET['end_date'] ?? null;
-            if (!$editId && !empty($itemType && !empty($start_date) && !empty($end_date))) {
+            $page_no = $_GET['page_no'] ?? null;
+            $sort_by = $_GET['sort_by'] ?? null;
+            $keyword = $_GET['keyword'] ?? null;
+            if (!$editId && !empty($itemType && !empty($start_date) && !empty($end_date && !empty($page_no) && !empty($sort_by) && !empty($keyword)))) {
                 $sqlInsert = "INSERT INTO `meta_details` (`end_points`, `meta_title`, `meta_description`, `page_title`) VALUES ('$final_string', '$metaTitle', '$metaDescription', '$pageTitle')";
                 $stmt = $pdo->prepare($sqlInsert);
                 $stmt->execute();
@@ -125,7 +128,7 @@ function getMetaDetails(){
         }
     }
 
-    $delete = "DELETE FROM meta_details WHERE end_points LIKE '%edit_id=%' OR end_points LIKE '%start_date=%' OR end_points LIKE '%end_date=%'";
+    $delete = "DELETE FROM meta_details WHERE end_points LIKE '%edit_id=%' OR end_points LIKE '%start_date=%' OR end_points LIKE '%end_date=%' OR end_points LIKE '%page_no%' OR end_points LIKE '%sort_by%' OR end_points LIKE '%keyword%'";
     $stmt = $pdo->prepare($delete);
     $stmt->execute();
 

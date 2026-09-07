@@ -152,21 +152,13 @@ if(isset($_GET['item_type']) && $_GET['item_type'] != ""){
                             counter++;
                             let edit_url = `<?php echo $site_url;?>role_form?item_type=role&edit_id=${item.role_id}`;
                             $("#listing_display_data").append(`<tr>
-                                
                                 <td><input type="checkbox" class="checkbox_css item ml-3 sales_summary_list_checkbox" name="chk[]" id="chk_${item.role_id}" accept="allitems" value="${item.role_id}" /></td>
-
                                 <td><a href="${edit_url}">${item.role_title}</a></td>
-                                
                                 <td><span class="badge badge-${item.display_status == 'Yes' ? 'success' : 'danger'}">${item.display_status}</span></td>
-                                
                                 <td>${item.created_at}</td>
-                                
                                 <td>${item.updated_at}</td>
-                                
                                 <td>${counter}</td>
-                                
                                 <td>${item.role_id}</td>
-
                             </tr>`);
                         });
 
