@@ -1,4 +1,4 @@
-<?php $arrSidebarData = getSidebarMenu(1);?>
+<?php $arrSidebarData = getSidebarMenu();?>
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <?php

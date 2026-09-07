@@ -1,6 +1,26 @@
 <?php
-function getSidebarMenu($userRoleId){
-    $sidebarModule = "SELECT meta_id AS module_id, end_points, sidebar_title, sidebar_icon, parent_id, params FROM meta_details WHERE is_module = 1 AND deleted_status = 'N' ORDER BY sidebar_order ASC";
+function getSidebarMenu(){
+    $userRoleId = 1;
+    if(isset($_SESSION['user']['user_role_id']) && $_SESSION['user']['user_role_id'] > 2){
+        $userRoleId = $_SESSION['user']['user_role_id'];
+    }
+    $sidebarModule = "
+    SELECT 
+        m.meta_id AS module_id,
+        m.end_points,
+        m.sidebar_title,
+        m.sidebar_icon,
+        m.parent_id,
+        m.params
+    FROM meta_details m
+    INNER JOIN role_access r 
+        ON m.meta_id = r.module_id
+    WHERE 
+        m.is_module = 1
+        AND m.deleted_status = 'N'
+        AND r.role_id = '$userRoleId' AND r.grant_view = 'Y'
+    ORDER BY m.sidebar_order ASC
+    ";
     return sqlSelect($sidebarModule);
 }
 function displayStatus(){
